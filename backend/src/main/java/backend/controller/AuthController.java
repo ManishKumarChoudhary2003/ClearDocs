@@ -2,10 +2,7 @@ package backend.controller;
 
 import backend.dto.AuthRequestDTO;
 import backend.entity.PlatformUser;
-import backend.repository.PlatformUserRepository;
 import backend.service.AuthService;
-import backend.service.JwtService;
-import backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,5 +49,12 @@ public class AuthController {
             System.out.println("Authentication failed: " + e.getMessage());
             throw new RuntimeException("Authentication failed", e);
         }
+    }
+
+
+    @GetMapping("/validate")
+    public String validateToken(@RequestParam("token") String token) {
+        service.validateToken(token);
+        return "Token is valid";
     }
 }
