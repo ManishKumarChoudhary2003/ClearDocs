@@ -31,7 +31,7 @@ public class AuthService {
         return jwtService.generateToken(email, platformUser.getRoles());
     }
 
-    public void validateToken(String token) {
-        jwtService.validateToken(token);
-    }
+//    public void validateToken(String token) {
+//        jwtService.validateToken(token);
+//    }
 }

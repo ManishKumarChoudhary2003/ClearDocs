@@ -54,11 +54,11 @@ public class StudentService {
         return false;
     }
 
-//    public List<Student> getAllStudentsByUser(Long userId) {
-//        Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
-//        if (platformUser.isPresent()) {
-//            return studentRepository.findAllByPlatformUser(platformUser.get());
-//        }
-//        return List.of();
-//    }
+    public List<Student> getAllStudentsByUser(Long userId) {
+        Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
+        if (platformUser.isPresent()) {
+            return studentRepository.findAllByPlatformUser(platformUser.get());
+        }
+        return List.of();
+    }
 }

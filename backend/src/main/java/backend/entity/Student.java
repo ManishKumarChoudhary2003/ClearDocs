@@ -1,8 +1,10 @@
 package backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -12,6 +14,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(exclude = {"platformUser", "documents"})
 public class Student {
 
     @Id
@@ -27,9 +30,11 @@ public class Student {
     private String enrollmentNumber;
 
     @OneToMany(mappedBy = "student", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Documents> documents;
 
     @ManyToOne
     @JoinColumn(name = "id")
+    @JsonIgnore
     private PlatformUser platformUser;
 }
