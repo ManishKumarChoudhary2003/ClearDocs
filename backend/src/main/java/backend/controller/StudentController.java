@@ -2,12 +2,9 @@ package backend.controller;
 
 import backend.entity.Student;
 import backend.service.StudentService;
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +21,7 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<Student> addStudent(@RequestBody Student student, @RequestParam Long userId) {
         Student createdStudent = studentService.addStudent(student, userId);
@@ -34,7 +31,7 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{studentId}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long studentId) {
         Optional<Student> student = studentService.findStudentById(studentId);
@@ -42,7 +39,7 @@ public class StudentController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{studentId}")
     public ResponseEntity<Student> updateStudent(@PathVariable Long studentId, @RequestBody Student studentDetails) {
         Student updatedStudent = studentService.updateStudent(studentId, studentDetails);
@@ -52,7 +49,7 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{studentId}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long studentId) {
         boolean isDeleted = studentService.deleteStudent(studentId);
@@ -62,15 +59,13 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Student>> getAllStudentsByUser(@PathVariable Long userId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        System.out.println("rolessssssss");
         authorities.forEach(role -> System.out.println(role.getAuthority()));
-        System.out.println("rolessssssss");
 
         List<Student> students = studentService.getAllStudentsByUser(userId);
         if (!students.isEmpty()) {

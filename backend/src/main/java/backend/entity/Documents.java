@@ -32,6 +32,9 @@ public class Documents {
 
     private String hashCode;
 
+    @Lob
+    private byte[] content;
+
 
     @ManyToOne
     @JoinColumn(name = "student_id")

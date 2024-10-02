@@ -48,4 +48,30 @@ public class DocumentController {
         return ResponseEntity.ok(updatedDocument);
     }
 
+    @PostMapping("/verify-document")
+    public ResponseEntity<String> verifyDocument(
+            @RequestParam("enrollmentNumber") String enrollmentNumber,
+            @RequestParam("file") MultipartFile file) {
+
+        try {
+            String verificationResult = documentService.verifyDocument(enrollmentNumber, file);
+            return ResponseEntity.ok(verificationResult);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> downloadDocument(@RequestParam Long documentId) {
+        Documents document = documentService.getDocumentById(documentId);
+
+        if (document == null || document.getContent() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=\"" + document.getDocumentName() + "\"")
+                .body(document.getContent());
+    }
+
 }

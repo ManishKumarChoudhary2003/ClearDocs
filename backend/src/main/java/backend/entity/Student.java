@@ -34,7 +34,7 @@ public class Student {
     private Set<Documents> documents;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "platform_user_id")
     @JsonIgnore
     private PlatformUser platformUser;
 }

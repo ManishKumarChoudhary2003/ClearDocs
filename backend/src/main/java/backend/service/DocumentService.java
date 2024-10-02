@@ -44,6 +44,12 @@ public class DocumentService {
         long fileSize = file.getSize();
         document.setFileSize(convertToReadableSize(fileSize));
 
+        try {
+            document.setContent(file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read file content", e);
+        }
+
         return documentRepository.save(document);
     }
 
@@ -54,6 +60,11 @@ public class DocumentService {
         }
 
         return studentOptional.get().getDocuments().stream().toList();
+    }
+
+    public Documents getDocumentById(Long documentId) {
+        return documentRepository.findById(documentId)
+                .orElseThrow(() -> new RuntimeException("Document not found with ID: " + documentId));
     }
 
     public void deleteDocument(Long documentId) {
@@ -80,6 +91,11 @@ public class DocumentService {
             document.setHashCode(generateSHA256Hash(file));
             long fileSize = file.getSize();
             document.setFileSize(convertToReadableSize(fileSize));
+            try {
+                document.setContent(file.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read file content", e);
+            }
         }
 
         if (documentType != null && !documentType.isEmpty()) {
@@ -88,6 +104,22 @@ public class DocumentService {
 
         return documentRepository.save(document);
     }
+
+    public String verifyDocument(String enrollmentNumber, MultipartFile file) {
+        Optional<Student> studentOptional = studentRepository.findByEnrollmentNumber(enrollmentNumber);
+        if (studentOptional.isEmpty()) {
+            throw new RuntimeException("Student not found with Enrollment Number: " + enrollmentNumber);
+        }
+
+        Student student = studentOptional.get();
+        String fileHash = generateSHA256Hash(file);
+
+        boolean documentExists = student.getDocuments().stream()
+                .anyMatch(doc -> doc.getHashCode().equals(fileHash));
+
+        return documentExists ? "Document is verified." : "Document is not verified.";
+    }
+
 
 
     private static String convertToReadableSize(long sizeInBytes) {
@@ -107,4 +139,6 @@ public class DocumentService {
             throw new RuntimeException("Error generating SHA-256 hash for document", e);
         }
     }
+
+
 }
