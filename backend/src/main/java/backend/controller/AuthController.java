@@ -31,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> getToken(@RequestBody AuthRequestDTO authRequestDTO) {
-        System.out.println("login api:::");
+//        System.out.println("login api:::");
 
         try {
             Authentication authenticate = authenticationManager.authenticate(
