@@ -2,7 +2,7 @@
 function App() {
   return (
     <div>
-      Hello Manish Choudhary
+      Hello Manish Kumar Choudhary
     </div>
   );
 }
