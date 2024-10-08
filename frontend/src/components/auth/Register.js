@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 import APIClient from '../../api/APIClient';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -8,29 +9,48 @@ const Register = () => {
     email: '',
     mobileNumber: '',
     password: '',
-    roles: '', // Initialize roles as an empty string
+    roles: [], // Initialize roles as an array
   });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Initialize navigate for routing
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    if (name === 'roles') {
+      setUser({ ...user, roles: [value] }); // Wrap role in an array
+    } else {
+      setUser({ ...user, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await APIClient.register(user);
-      setMessage(`User registered successfully: ${response.data.email}`);
+      console.log('API response:', response); // Debugging response
+
+      // Store user ID in localStorage
+      localStorage.setItem('userId', response.data.id);
+
+      // Set success message
+      setMessage('Registration successful');
+
+      // Redirect to login after 2 seconds
+      setTimeout(() => {
+        navigate('/login'); // Navigate to login page
+      }, 2000);
+
+      // Clear form fields
       setUser({
         username: '',
         email: '',
         mobileNumber: '',
         password: '',
-        roles: '',
-      }); 
+        roles: [],
+      });
     } catch (error) {
-      setMessage('Error registering user: ' + error.response.data.message);
+      console.log('Error response:', error.response); // Debugging error response
+      setMessage('Error registering user: ' + (error.response?.data?.message || error.message));
     }
   };
 
@@ -39,6 +59,7 @@ const Register = () => {
       <div className="card" style={{ width: '30rem' }}>
         <div className="card-body">
           <h2 className="card-title text-center">Register</h2>
+          {message && <p className="text-center text-success mb-3">{message}</p>} {/* Display message above form */}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Username:</label>
@@ -88,7 +109,7 @@ const Register = () => {
               <label className="form-label">Roles:</label>
               <select
                 name="roles"
-                value={user.roles}
+                value={user.roles[0]} // Ensure only the first role is displayed
                 onChange={handleChange}
                 className="form-select"
                 required
@@ -96,12 +117,10 @@ const Register = () => {
                 <option value="" disabled>Select a role</option>
                 <option value="USER">User</option>
                 <option value="ADMIN">Admin</option>
-                {/* Add more roles as needed */}
               </select>
             </div>
             <button type="submit" className="btn btn-primary w-100">Register</button>
           </form>
-          {message && <p className="text-center mt-3">{message}</p>}
         </div>
       </div>
     </div>

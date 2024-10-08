@@ -4,30 +4,48 @@ import { useNavigate } from 'react-router-dom';
 
 const AllStudents = () => {
   const [students, setStudents] = useState([]);
-  const [userId, setUserId] = useState(1); // Replace this with actual user ID
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Correct hook for navigation in React Router v6
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch all students for the user
     const fetchStudents = async () => {
+      const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem('token');
+
+      // Check if userId is not null or undefined
+      if (!userId) {
+        setError('User ID is not found. Please log in again.');
+        return;
+      }
+
       try {
-        const response = await axios.get(`http://localhost:8080/user/${userId}`);
-        if (response.data) {
-          setStudents(response.data);
-        }
+        // Fetch all students for the logged-in user
+        const response = await axios.get(`http://localhost:8080/student/user/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setStudents(response.data || []);
       } catch (err) {
-        setError('Failed to fetch students.');
+        console.error('Error fetching students:', err.response ? err.response.data : err.message);
+        setError(err.response?.data?.message || 'Failed to fetch students.');
       }
     };
+
     fetchStudents();
-  }, [userId]);
+  }, []);
 
   const deleteStudent = async (studentId) => {
+    const token = localStorage.getItem('token');
     try {
-      await axios.delete(`http://localhost:8080/delete/${studentId}`);
-      setStudents(students.filter(student => student.id !== studentId));
+      await axios.delete(`http://localhost:8080/student/delete/${studentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setStudents((prevStudents) => prevStudents.filter((student) => student.studentId !== studentId));
     } catch (err) {
+      console.error('Error deleting student:', err.response ? err.response.data : err.message);
       setError('Failed to delete student.');
     }
   };
@@ -41,7 +59,7 @@ const AllStudents = () => {
   };
 
   const goToAddStudent = () => {
-    navigate('/add-student'); // Navigate to add-student route
+    navigate('/add-student');
   };
 
   return (
@@ -55,16 +73,16 @@ const AllStudents = () => {
         <div className="alert alert-info">No students found.</div>
       ) : (
         <ul className="list-group">
-          {students.map(student => (
-            <li key={student.id} className="list-group-item d-flex justify-content-between align-items-center">
-              <span onClick={() => goToStudentDetails(student.id)} style={{ cursor: 'pointer' }}>
+          {students.map((student) => (
+            <li key={student.studentId} className="list-group-item d-flex justify-content-between align-items-center">
+              <span onClick={() => goToStudentDetails(student.studentId)} style={{ cursor: 'pointer' }}>
                 {student.name} - {student.email}
               </span>
               <div>
-                <button className="btn btn-warning btn-sm me-2" onClick={() => goToUpdatePage(student.id)}>
+                <button className="btn btn-warning btn-sm me-2" onClick={() => goToUpdatePage(student.studentId)}>
                   Update
                 </button>
-                <button className="btn btn-danger btn-sm" onClick={() => deleteStudent(student.id)}>
+                <button className="btn btn-danger btn-sm" onClick={() => deleteStudent(student.studentId)}>
                   Delete
                 </button>
               </div>

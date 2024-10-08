@@ -1,22 +1,19 @@
-// src/pages/Home.js
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Home = () => {
   return (
     <div className="container mt-5">
-      <h1 className="text-center mb-4">Comprehensive Automated Document Verification System</h1>
+      <h1 className="text-center mb-4">ClearDocs: Automated Document Verification System</h1>
       <p className="text-center mb-5">
-        Streamlining the process of document verification using AI and Blockchain technology.
+        Simplifying Document Verification for Everyone.
       </p>
 
       <div className="row">
         <div className="col-md-6">
-          <h3>Background</h3>
+          <h3>Overview</h3>
           <p>
-            The current manual process of verifying documents for various official purposes is time-consuming, 
-            error-prone, and lacks efficiency. This system addresses the urgent requirement for an online 
-            platform that automates and secures the document verification process.
+            ClearDocs is a secure and efficient platform designed to streamline the verification of official documents. Our goal is to provide a user-friendly portal for issuing authorities, verifiers, and individuals.
           </p>
         </div>
         <div className="col-md-6">
@@ -32,20 +29,34 @@ const Home = () => {
         <div className="col-md-6">
           <img
             src="https://via.placeholder.com/500x300" // Replace with a relevant image
-            alt="AI Technology"
+            alt="Document Features"
             className="img-fluid rounded"
           />
         </div>
         <div className="col-md-6">
-          <h3>Expected Solution</h3>
-          <p>
-            The proposed solution aims to establish a user-friendly portal accessible to issuing authorities, 
-            verifying authorities, and individuals. Participants will develop a comprehensive portal that facilitates 
-            the generation, verification, and accessibility of essential documents for any official purpose. 
-            AI algorithms will efficiently verify the authenticity of uploaded documents, and blockchain technology 
-            will ensure the immutability and integrity of verified certificates.
-          </p>
+          <h3>Key Features</h3>
+          <ul className="list-unstyled">
+            <li>
+              <strong>Document Search:</strong> Leverage Solr/Elasticsearch for quick and efficient document retrieval.
+            </li>
+            <li>
+              <strong>Real-Time Verification:</strong> Instant verification for faster processing.
+            </li>
+            <li>
+              <strong>Role-Based Access Control:</strong> Secure access tailored to different user roles.
+            </li>
+            <li>
+              <strong>Notification System:</strong> Stay updated with real-time notifications on document status.
+            </li>
+            <li>
+              <strong>Containerized Architecture:</strong> Easy deployment with Docker for scalability.
+            </li>
+          </ul>
         </div>
+      </div>
+
+      <div className="text-center mt-5">
+        <p className="text-muted">&copy; 2024 ClearDocs. All rights reserved.</p>
       </div>
     </div>
   );

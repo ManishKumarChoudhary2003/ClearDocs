@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 import APIClient from '../../api/APIClient';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
   const [authRequest, setAuthRequest] = useState({ email: '', password: '' });
-  const [token, setToken] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Initialize navigate for routing
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,10 +17,17 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await APIClient.login(authRequest);
-      setToken(response.data); // Save the token
+
+      localStorage.setItem('token', response.data);
       setMessage('Login successful!');
+
+      // Redirect to home route after login
+      setTimeout(() => {
+        navigate('/'); // Redirect to the '/' route
+      }, 2000);
+
     } catch (error) {
-      setMessage('Error logging in: ' + error.response.data.message);
+      setMessage('Error logging in: ' + (error.response?.data?.message || error.message));
     }
   };
 
@@ -28,6 +36,7 @@ const Login = () => {
       <div className="card" style={{ width: '30rem' }}>
         <div className="card-body">
           <h2 className="card-title text-center">Login</h2>
+          {message && <p className="text-center text-success mb-3">{message}</p>} {/* Show success message */}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Email:</label>
@@ -53,8 +62,6 @@ const Login = () => {
             </div>
             <button type="submit" className="btn btn-primary w-100">Login</button>
           </form>
-          {message && <p className="text-center mt-3">{message}</p>}
-          {token && <p className="text-center mt-3">Your token: <strong>{token}</strong></p>}
         </div>
       </div>
     </div>

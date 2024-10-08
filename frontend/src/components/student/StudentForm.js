@@ -1,4 +1,3 @@
-// src/components/StudentForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -7,13 +6,15 @@ const StudentForm = () => {
   const [email, setEmail] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [enrollmentNumber, setEnrollmentNumber] = useState('');
-  const [userId, setUserId] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    const userId = localStorage.getItem("userId"); // Fetch userId from localStorage
+    const token = localStorage.getItem("token"); // Fetch token from localStorage
+
     const studentData = {
       name,
       email,
@@ -22,20 +23,24 @@ const StudentForm = () => {
     };
 
     try {
-      const response = await axios.post(`http://localhost:8080/student/add?userId=${userId}`, studentData);
+      const response = await axios.post(`http://localhost:8080/student/add?userId=${userId}`, studentData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include JWT token
+          'Content-Type': 'application/json', // Set content type
+        },
+      });
+
       if (response.status === 201) {
-        setSuccess('Student added successfully!');
-        setName('');
-        setEmail('');
-        setDateOfBirth('');
-        setEnrollmentNumber('');
-        setError('');
+        // Optionally handle success, e.g., redirect or clear form
+        console.log('Student added successfully:', response.data);
+        // Optionally, navigate back or clear the form
       }
     } catch (error) {
-      setError('Failed to add student. Please try again.');
-      setSuccess('');
+      console.error('Failed to add student', error);
+      // You might want to set an error state here if needed
     }
   };
+
 
   return (
     <div className="container mt-5">
@@ -91,18 +96,6 @@ const StudentForm = () => {
                     value={enrollmentNumber}
                     onChange={(e) => setEnrollmentNumber(e.target.value)}
                     placeholder="Enter enrollment number"
-                    required
-                  />
-                </div>
-                <div className="form-group mb-3">
-                  <label htmlFor="userId" className="form-label">User ID</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="userId"
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                    placeholder="Enter user ID"
                     required
                   />
                 </div>
