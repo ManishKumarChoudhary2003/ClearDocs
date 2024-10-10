@@ -12,14 +12,12 @@ const AllStudents = () => {
       const userId = localStorage.getItem('userId');
       const token = localStorage.getItem('token');
 
-      // Check if userId is not null or undefined
       if (!userId) {
         setError('User ID is not found. Please log in again.');
         return;
       }
 
       try {
-        // Fetch all students for the logged-in user
         const response = await axios.get(`http://localhost:8080/student/user/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -50,12 +48,12 @@ const AllStudents = () => {
     }
   };
 
-  const goToUpdatePage = (studentId) => {
-    navigate(`/update-student/${studentId}`);
-  };
-
   const goToStudentDetails = (studentId) => {
     navigate(`/student/${studentId}`);
+  };
+
+  const goToUpdatePage = (studentId) => {
+    navigate(`/update-student/${studentId}`);
   };
 
   const goToAddStudent = () => {
@@ -64,31 +62,47 @@ const AllStudents = () => {
 
   return (
     <div className="container mt-5">
-      <h2>All Students</h2>
-      <button className="btn btn-primary mb-3" onClick={goToAddStudent}>
+      <h2 className="text-center mb-4">All Students</h2>
+      <button className="btn btn-primary mb-4" onClick={goToAddStudent}>
         Add Student
       </button>
       {error && <div className="alert alert-danger">{error}</div>}
       {students.length === 0 ? (
-        <div className="alert alert-info">No students found.</div>
+        <div className="alert alert-info text-center">No students found.</div>
       ) : (
-        <ul className="list-group">
+        <div className="row">
           {students.map((student) => (
-            <li key={student.studentId} className="list-group-item d-flex justify-content-between align-items-center">
-              <span onClick={() => goToStudentDetails(student.studentId)} style={{ cursor: 'pointer' }}>
-                {student.name} - {student.email}
-              </span>
-              <div>
-                <button className="btn btn-warning btn-sm me-2" onClick={() => goToUpdatePage(student.studentId)}>
-                  Update
-                </button>
-                <button className="btn btn-danger btn-sm" onClick={() => deleteStudent(student.studentId)}>
-                  Delete
-                </button>
+            <div key={student.studentId} className="col-md-4 mb-4">
+              <div className="card shadow" style={{ cursor: 'pointer' }} onClick={() => goToStudentDetails(student.studentId)}>
+                <div className="card-body text-center">
+                  <h5 className="card-title">{student.name}</h5>
+                  <p className="card-text">{student.email}</p>
+                  <p className="card-text">Enrollment: {student.enrollmentNumber}</p>
+                  <div className="d-flex justify-content-around">
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        goToUpdatePage(student.studentId);
+                      }}
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteStudent(student.studentId);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

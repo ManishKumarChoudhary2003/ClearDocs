@@ -15,7 +15,7 @@ function App() {
     <Router>
       <div>
         <Navbar />
-        <div className="container">
+        <div className="container mt-4">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
