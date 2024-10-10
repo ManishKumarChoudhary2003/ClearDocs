@@ -15,15 +15,18 @@ const StudentForm = () => {
     const userId = localStorage.getItem("userId"); // Fetch userId from localStorage
     const token = localStorage.getItem("token"); // Fetch token from localStorage
 
+    // Append time 'T00:00:00' to the dateOfBirth to match LocalDateTime format
+    const dateOfBirthWithTime = `${dateOfBirth}T00:00:00`;
+
     const studentData = {
       name,
       email,
-      dateOfBirth,
+      dateOfBirth: dateOfBirthWithTime, // Pass the date with time
       enrollmentNumber,
     };
 
     try {
-      const response = await axios.post(`http://localhost:8080/student/add?userId=${userId}`, studentData, {
+      const response = await axios.post(`http://localhost:8080/student/add/${userId}`, studentData, {
         headers: {
           Authorization: `Bearer ${token}`, // Include JWT token
           'Content-Type': 'application/json', // Set content type
@@ -31,15 +34,18 @@ const StudentForm = () => {
       });
 
       if (response.status === 201) {
-        // Optionally handle success, e.g., redirect or clear form
         console.log('Student added successfully:', response.data);
-        // Optionally, navigate back or clear the form
+        // Optionally, you can clear the form or handle the success case here
+        setSuccess('Student added successfully!');
+        setError('');
       }
     } catch (error) {
       console.error('Failed to add student', error);
-      // You might want to set an error state here if needed
+      setError('Failed to add student. Please try again.');
+      setSuccess('');
     }
   };
+
 
 
   return (

@@ -22,8 +22,8 @@ public class StudentController {
     private StudentService studentService;
 
 //    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/add")
-    public ResponseEntity<Student> addStudent(@RequestBody Student student, @RequestParam Long userId) {
+    @PostMapping("/add/{userId}")
+    public ResponseEntity<Student> addStudent(@RequestBody Student student, @PathVariable Long userId) {
         Student createdStudent = studentService.addStudent(student, userId);
         if (createdStudent != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
