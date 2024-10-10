@@ -9,6 +9,7 @@ import StudentForm from './components/student/StudentForm';
 import AllStudents from './components/student/AllStudents'; // Ensure the correct import path
 import StudentDetails from './components/student/StudentDetails'; // Ensure the correct import path
 import UpdateStudent from './components/student/UpdateStudent'; // Ensure the correct import path
+import UploadDocument from './components/document/UploadDocument';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/add-student" element={<StudentForm />} />
             <Route path="/student/:studentId" element={<StudentDetails />} />
+            <Route path="/upload-document/:studentId" element={<UploadDocument />} />
             <Route path="/update-student/:studentId" element={<UpdateStudent />} />
             <Route path="/register" element={<Register />} />
             <Route path="/all-students" element={<AllStudents />} />
