@@ -22,7 +22,13 @@ public class StudentService {
 
     public Student addStudent(Student student, Long userId) {
         Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
+
         if (platformUser.isPresent()) {
+            // Check if the student already exists by enrollment number
+            if (studentRepository.existsByEnrollmentNumber(student.getEnrollmentNumber())) {
+                throw new IllegalArgumentException("Student with this enrollment number already exists.");
+            }
+
             student.setPlatformUser(platformUser.get());
             return studentRepository.save(student);
         }

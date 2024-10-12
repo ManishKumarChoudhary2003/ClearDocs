@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const StudentDetails = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const StudentDetails = () => {
 
     fetchDocuments();
   }, [studentId]);
+
   const confirmDeleteDocument = async () => {
     const token = localStorage.getItem('token');
     if (docToDelete) {
@@ -46,16 +48,17 @@ const StudentDetails = () => {
           },
         });
 
-        // Update the documents state to remove the deleted document
         setDocuments(documents.filter(doc => doc.documentId !== docToDelete));
         setSuccessMessage('Document deleted successfully!');
         setDeleteModal(false); // Close delete modal
         setDocToDelete(null); // Reset the document to delete
 
-        // Clear the success message after 5 seconds
         setTimeout(() => {
           setSuccessMessage('');
-        }, 2000);
+        }, 1000);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } catch (err) {
         console.error('Error deleting document:', err.response ? err.response.data : err.message);
         setError('Failed to delete document.');
@@ -69,7 +72,7 @@ const StudentDetails = () => {
     const token = localStorage.getItem('token');
 
     const formData = new FormData();
-    formData.append('studentId', studentId); // Use dynamic studentId from URL
+    formData.append('studentId', studentId);
     formData.append('file', file);
     formData.append('documentType', documentType);
 
@@ -82,21 +85,54 @@ const StudentDetails = () => {
       });
       setSuccessMessage('Document uploaded successfully!');
       setShowModal(false);
-      setDocuments([...documents, { documentType, documentName: file.name }]); // Update local state
+      setDocuments([...documents, { documentType, documentName: file.name, fileSize: `${(file.size / 1024).toFixed(2)} KB` }]);
 
-      // Clear the success message after 5 seconds
       setTimeout(() => {
         setSuccessMessage('');
-      }, 2000);
+      }, 1000);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+
     } catch (err) {
       console.error('Error uploading document:', err.response ? err.response.data : err.message);
       setError('Failed to upload document.');
     }
   };
 
+  // Function to download a document
+  const downloadDocument = async (documentId, documentName) => {
+    const token = localStorage.getItem('token');
+
+    if (!documentId) {
+      console.error('Document ID is missing or undefined.');
+      setError('Failed to download document. Document ID is missing.');
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:8080/doc/download?documentId=${documentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: 'blob',
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', documentName);
+      document.body.appendChild(link);
+      link.click();
+    } catch (err) {
+      console.error('Error downloading document:', err.response ? err.response.data : err.message);
+      setError('Failed to download document.');
+    }
+  };
+
   return (
     <div className="container mt-5">
-      <h2>Document Management</h2>
+      <h2 className="mb-4 text-center">Document Management</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       {successMessage && <div className="alert alert-success">{successMessage}</div>}
       {loading ? (
@@ -104,40 +140,44 @@ const StudentDetails = () => {
       ) : (
         <>
           <button
-            className="btn btn-secondary mb-4"
-            onClick={() => setShowModal(true)} // Show modal when clicked
+            className="btn btn-primary mb-4"
+            onClick={() => setShowModal(true)}
           >
             Upload Document
           </button>
 
-          {/* Document display section */}
           {documents.length > 0 ? (
-            // Rendering documents and using only documentId for identifying documents
             <ul className="list-group">
               {documents.map((document) => (
                 <li
-                  key={document.documentId} // Ensure each document has a unique documentId
+                  key={document.documentId}
                   className="list-group-item d-flex justify-content-between align-items-center"
                 >
-                  <span>{document.documentType} - {document.documentName}</span>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => {
-                      setDocToDelete(document.documentId); // Set documentId for the one to be deleted
-                      setDeleteModal(true); // Open delete modal
-                    }}
-                  >
-                    Delete
-                  </button>
+                  <span>{document.documentType} - {document.documentName} ({document.fileSize})</span>
+                  <div>
+                    <button
+                      className="btn btn-primary btn-sm me-2"
+                      onClick={() => downloadDocument(document.documentId, document.documentName)}
+                    >
+                      Download
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => {
+                        setDocToDelete(document.documentId);
+                        setDeleteModal(true);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
-
           ) : (
             <div className="alert alert-info">No documents found.</div>
           )}
 
-          {/* Upload Document Modal */}
           <Modal show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
               <Modal.Title>Upload Document</Modal.Title>
@@ -174,7 +214,6 @@ const StudentDetails = () => {
             </Modal.Body>
           </Modal>
 
-          {/* Delete Confirmation Modal */}
           <Modal show={deleteModal} onHide={() => setDeleteModal(false)}>
             <Modal.Header closeButton>
               <Modal.Title>Confirm Document Deletion</Modal.Title>

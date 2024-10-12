@@ -24,12 +24,16 @@ public class StudentController {
 //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add/{userId}")
     public ResponseEntity<Student> addStudent(@RequestBody Student student, @PathVariable Long userId) {
-        Student createdStudent = studentService.addStudent(student, userId);
-        if (createdStudent != null) {
+        try {
+            Student createdStudent = studentService.addStudent(student, userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // 409 Conflict
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+
 
 //    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{studentId}")

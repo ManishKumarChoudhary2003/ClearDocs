@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const StudentForm = () => {
   const [name, setName] = useState('');
@@ -8,6 +9,8 @@ const StudentForm = () => {
   const [enrollmentNumber, setEnrollmentNumber] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,9 +38,13 @@ const StudentForm = () => {
 
       if (response.status === 201) {
         console.log('Student added successfully:', response.data);
-        // Optionally, you can clear the form or handle the success case here
         setSuccess('Student added successfully!');
         setError('');
+
+        // Navigate to the all-students route after a successful submission
+        setTimeout(() => {
+          navigate('/all-students'); // Navigate to all-students route
+        }, 2000); // 2 seconds delay before navigation
       }
     } catch (error) {
       console.error('Failed to add student', error);
@@ -45,8 +52,6 @@ const StudentForm = () => {
       setSuccess('');
     }
   };
-
-
 
   return (
     <div className="container mt-5">
