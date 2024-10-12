@@ -12,14 +12,15 @@ const StudentDetails = () => {
   const [showModal, setShowModal] = useState(false);
   const [documentType, setDocumentType] = useState('');
   const [file, setFile] = useState(null);
+  const [deleteModal, setDeleteModal] = useState(false); // Modal for deletion confirmation
+  const [docToDelete, setDocToDelete] = useState(null); // Document to be deleted
+  const [successMessage, setSuccessMessage] = useState(''); // For success messages
 
-  // Fetch documents for the student
   useEffect(() => {
     const fetchDocuments = async () => {
       const token = localStorage.getItem('token');
-
       try {
-        const documentsResponse = await axios.get(`http://localhost:8080/documents/${studentId}`, {
+        const documentsResponse = await axios.get(`http://localhost:8080/doc/student/${studentId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -34,22 +35,27 @@ const StudentDetails = () => {
     };
 
     fetchDocuments();
-  }, [studentId]); // Add studentId as a dependency
-
-  // Function to delete a document
-  const deleteDocument = async (documentId) => {
+  }, [studentId]);
+  const confirmDeleteDocument = async () => {
     const token = localStorage.getItem('token');
-    if (window.confirm('Are you sure you want to delete this document?')) {
+    if (docToDelete) {
       try {
-        await axios.delete(`http://localhost:8080/doc/${documentId}`, {
+        await axios.delete(`http://localhost:8080/doc/${docToDelete}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
         // Update the documents state to remove the deleted document
-        setDocuments(documents.filter(doc => doc.documentId !== documentId));
-        alert('Document deleted successfully!');
+        setDocuments(documents.filter(doc => doc.documentId !== docToDelete));
+        setSuccessMessage('Document deleted successfully!');
+        setDeleteModal(false); // Close delete modal
+        setDocToDelete(null); // Reset the document to delete
+
+        // Clear the success message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 2000);
       } catch (err) {
         console.error('Error deleting document:', err.response ? err.response.data : err.message);
         setError('Failed to delete document.');
@@ -74,9 +80,14 @@ const StudentDetails = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      alert('Document uploaded successfully!');
+      setSuccessMessage('Document uploaded successfully!');
       setShowModal(false);
       setDocuments([...documents, { documentType, documentName: file.name }]); // Update local state
+
+      // Clear the success message after 5 seconds
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 2000);
     } catch (err) {
       console.error('Error uploading document:', err.response ? err.response.data : err.message);
       setError('Failed to upload document.');
@@ -85,8 +96,9 @@ const StudentDetails = () => {
 
   return (
     <div className="container mt-5">
-      <h2>Document Management for Student ID: {studentId}</h2>
+      <h2>Document Management</h2>
       {error && <div className="alert alert-danger">{error}</div>}
+      {successMessage && <div className="alert alert-success">{successMessage}</div>}
       {loading ? (
         <div className="alert alert-info">Loading documents...</div>
       ) : (
@@ -100,19 +112,27 @@ const StudentDetails = () => {
 
           {/* Document display section */}
           {documents.length > 0 ? (
+            // Rendering documents and using only documentId for identifying documents
             <ul className="list-group">
               {documents.map((document) => (
-                <li key={document.documentId} className="list-group-item d-flex justify-content-between align-items-center">
+                <li
+                  key={document.documentId} // Ensure each document has a unique documentId
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                >
                   <span>{document.documentType} - {document.documentName}</span>
                   <button
                     className="btn btn-danger btn-sm"
-                    onClick={() => deleteDocument(document.documentId)}
+                    onClick={() => {
+                      setDocToDelete(document.documentId); // Set documentId for the one to be deleted
+                      setDeleteModal(true); // Open delete modal
+                    }}
                   >
                     Delete
                   </button>
                 </li>
               ))}
             </ul>
+
           ) : (
             <div className="alert alert-info">No documents found.</div>
           )}
@@ -152,6 +172,20 @@ const StudentDetails = () => {
                 <button type="submit" className="btn btn-primary">Upload</button>
               </form>
             </Modal.Body>
+          </Modal>
+
+          {/* Delete Confirmation Modal */}
+          <Modal show={deleteModal} onHide={() => setDeleteModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Confirm Document Deletion</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>Are you sure you want to delete this document?</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <button className="btn btn-secondary" onClick={() => setDeleteModal(false)}>Cancel</button>
+              <button className="btn btn-danger" onClick={confirmDeleteDocument}>Delete</button>
+            </Modal.Footer>
           </Modal>
         </>
       )}
