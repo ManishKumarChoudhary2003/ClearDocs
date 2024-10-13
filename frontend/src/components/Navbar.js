@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
+import { FaHome, FaFileAlt, FaUser, FaUserShield, FaSignInAlt, FaSignOutAlt, FaClipboardCheck } from 'react-icons/fa';
 
 const Navbar = () => {
   const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [showResultModal, setShowResultModal] = useState(false); // State for result modal
+  const [showResultModal, setShowResultModal] = useState(false);
   const [enrollmentNumber, setEnrollmentNumber] = useState('');
   const [file, setFile] = useState(null);
   const [verificationResult, setVerificationResult] = useState('');
@@ -14,7 +15,6 @@ const Navbar = () => {
   const [userRole, setUserRole] = useState('');
   const [isAuthenticated, setAuthenticated] = useState(false);
 
-  // Retrieve the user role and authentication token from localStorage when the component mounts
   useEffect(() => {
     const storedRole = localStorage.getItem('userRole');
     const authToken = localStorage.getItem("token");
@@ -26,12 +26,10 @@ const Navbar = () => {
     }
   }, []);
 
-  // Handle file upload
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // Handle form submission to verify the document
   const handleVerifyDocument = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -39,18 +37,18 @@ const Navbar = () => {
     formData.append('file', file);
 
     try {
-      const token = localStorage.getItem('token'); // Retrieve the token
+      const token = localStorage.getItem('token');
       const response = await axios.post('http://localhost:8080/doc/verify-document', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`, // Include the token
+          Authorization: `Bearer ${token}`,
         },
       });
 
       setVerificationResult(response.data);
-      setError(''); // Clear error message if any
-      setShowVerifyModal(false); // Close verification modal
-      setShowResultModal(true); // Open result modal
+      setError('');
+      setShowVerifyModal(false);
+      setShowResultModal(true);
     } catch (err) {
       setError('Error verifying document: ' + (err.response?.data || err.message));
       setVerificationResult('');
@@ -59,9 +57,9 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
-          <Link className="navbar-brand" to="/">MyBrand</Link>
+          <Link className="navbar-brand" to="/" style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>ClearDocs</Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -74,44 +72,57 @@ const Navbar = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ml-auto">
+            <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <Link className="nav-link" to="/">Home</Link>
+                <Link className="nav-link" to="/">
+                  <FaHome className="me-1" /> Home
+                </Link>
               </li>
-              {userRole === 'ROLE_STUDENT' && <li className="nav-item">
-                <Link className="nav-link" to="/student-documents">Documents</Link>
-              </li>}
-              <li className="nav-item">
-                <Link className="nav-link" to="/contact">Contact</Link>
-              </li>
-              {userRole === 'ROLE_ADMIN' && (
+              {userRole === 'ROLE_STUDENT' && isAuthenticated && (
                 <li className="nav-item">
-                  <Link className="nav-link" to="/all-students">Students</Link>
+                  <Link className="nav-link" to="/student-documents">
+                    <FaFileAlt className="me-1" /> Documents
+                  </Link>
                 </li>
               )}
-              {userRole === 'ROLE_ADMIN' || userRole === 'ROLE_USER' ? (
+              <li className="nav-item">
+                <Link className="nav-link" to="/contact">
+                  <FaUser className="me-1" /> Contact
+                </Link>
+              </li>
+              {userRole === 'ROLE_ADMIN' && isAuthenticated && (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/all-students">
+                    <FaUserShield className="me-1" /> Students
+                  </Link>
+                </li>
+              )}
+              {(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_USER') && isAuthenticated && (
                 <li className="nav-item">
                   <a href="#!" className="nav-link" onClick={() => setShowVerifyModal(true)}>
-                    Verify Document
+                    <FaClipboardCheck className="me-1" /> Verify Document
                   </a>
                 </li>
-              ) : null}
-
-              {/* Conditional rendering for Register and Login based on authentication */}
+              )}
               {!isAuthenticated && (
                 <>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/register">Register</Link>
+                    <Link className="nav-link" to="/register">
+                      <FaSignInAlt className="me-1" /> Register
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/login">Login</Link>
+                    <Link className="nav-link" to="/login">
+                      <FaSignInAlt className="me-1" /> Login
+                    </Link>
                   </li>
                 </>
               )}
-
               {isAuthenticated && (
                 <li className="nav-item">
-                  <Link className="nav-link" to="/logout">Logout</Link>
+                  <Link className="nav-link" to="/logout">
+                    <FaSignOutAlt className="me-1" /> Logout
+                  </Link>
                 </li>
               )}
             </ul>

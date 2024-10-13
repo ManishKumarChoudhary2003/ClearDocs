@@ -2,13 +2,17 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaClipboardCheck, FaUserShield, FaBell, FaSearch, FaDocker } from 'react-icons/fa';
 
+// Import local images from the assets folder
+import documentVerificationImg from '../assets/image1.jpeg'
+import documentFeaturesImg from '../assets/images2.jpeg'
+
 const Home = () => {
   return (
     <div className="container mt-5">
-      <h1 className="text-center mb-4">ClearDocs: Automated Document Verification System</h1>
-      <p className="text-center mb-5 lead">
+      {/* <h1 className="text-center mb-4">ClearDocs: Automated Document Verification System</h1> */}
+      <h2 className="text-center mb-5 lead">
         Simplifying Document Verification for Everyone with Trust and Efficiency.
-      </p>
+      </h2>
 
       <div className="row align-items-center">
         <div className="col-md-6">
@@ -20,9 +24,10 @@ const Home = () => {
         </div>
         <div className="col-md-6">
           <img
-            src="https://via.placeholder.com/500x300" // Replace with a relevant image
+            src={documentVerificationImg} // Use the imported image
             alt="Document Verification"
             className="img-fluid rounded shadow"
+            style={{ width: '80%', height: 'auto' }} // Increased size
           />
         </div>
       </div>
@@ -30,9 +35,10 @@ const Home = () => {
       <div className="row mt-4">
         <div className="col-md-6">
           <img
-            src="https://via.placeholder.com/500x300" // Replace with a relevant image
+            src={documentFeaturesImg} // Use the imported image
             alt="Document Features"
             className="img-fluid rounded shadow"
+            style={{ width: '80%', height: 'auto' }} // Increased size
           />
         </div>
         <div className="col-md-6">
@@ -73,9 +79,6 @@ const Home = () => {
       </div>
 
       <div className="text-center mt-5">
-        <button className="btn btn-primary btn-lg" onClick={() => window.location.href = '/register'}>
-          Get Started
-        </button>
         <p className="text-muted mt-3">&copy; 2024 ClearDocs. All rights reserved.</p>
       </div>
     </div>

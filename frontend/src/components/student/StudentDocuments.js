@@ -90,7 +90,7 @@ const StudentDocuments = () => {
             <h2 className="mb-4">My Documents</h2>
             {error && <div className="alert alert-danger">{error}</div>}
             {documents.length === 0 ? (
-                <p className="text-center">No documents found for this student.</p>
+                <p className="text-center">No documents found for you.</p>
             ) : (
                 <div className="row">
                     {documents.map((document) => (
