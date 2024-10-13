@@ -9,8 +9,7 @@ import documentFeaturesImg from '../assets/images2.jpeg'
 const Home = () => {
   return (
     <div className="container mt-5">
-      {/* <h1 className="text-center mb-4">ClearDocs: Automated Document Verification System</h1> */}
-      <h2 className="text-center mb-5 lead">
+      <h2 className="text-center mb-5 lead" style={{ color: '#343a40', fontWeight: 'bold' }}>
         Simplifying Document Verification for Everyone with Trust and Efficiency.
       </h2>
 
@@ -44,31 +43,31 @@ const Home = () => {
         <div className="col-md-6">
           <h3>Key Features</h3>
           <ul className="list-unstyled">
-            <li className="d-flex align-items-center mb-3">
+            <li className="d-flex align-items-center mb-4" style={{ backgroundColor: '#e7f3fe', padding: '10px', borderRadius: '5px' }}>
               <FaSearch className="me-2 text-primary" size={30} />
               <span>
                 <strong>Document Search:</strong> Leverage Solr/Elasticsearch for quick and efficient document retrieval.
               </span>
             </li>
-            <li className="d-flex align-items-center mb-3">
+            <li className="d-flex align-items-center mb-4" style={{ backgroundColor: '#e7f3fe', padding: '10px', borderRadius: '5px' }}>
               <FaClipboardCheck className="me-2 text-success" size={30} />
               <span>
                 <strong>Real-Time Verification:</strong> Instant verification for faster processing and peace of mind.
               </span>
             </li>
-            <li className="d-flex align-items-center mb-3">
+            <li className="d-flex align-items-center mb-4" style={{ backgroundColor: '#e7f3fe', padding: '10px', borderRadius: '5px' }}>
               <FaUserShield className="me-2 text-warning" size={30} />
               <span>
                 <strong>Role-Based Access Control:</strong> Secure access tailored to different user roles and responsibilities.
               </span>
             </li>
-            <li className="d-flex align-items-center mb-3">
+            <li className="d-flex align-items-center mb-4" style={{ backgroundColor: '#e7f3fe', padding: '10px', borderRadius: '5px' }}>
               <FaBell className="me-2 text-info" size={30} />
               <span>
                 <strong>Notification System:</strong> Stay updated with real-time notifications on document status and updates.
               </span>
             </li>
-            <li className="d-flex align-items-center mb-3">
+            <li className="d-flex align-items-center mb-4" style={{ backgroundColor: '#e7f3fe', padding: '10px', borderRadius: '5px' }}>
               <FaDocker className="me-2 text-danger" size={30} />
               <span>
                 <strong>Containerized Architecture:</strong> Easy deployment with Docker for seamless scalability and management.

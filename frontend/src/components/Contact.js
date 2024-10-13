@@ -1,5 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Profile from '../assets/profile.jpeg';
 
 const Contact = () => {
   return (
@@ -9,18 +10,39 @@ const Contact = () => {
           <div className="card shadow-lg p-3 mb-5 bg-white rounded">
             <div className="row no-gutters">
               {/* Image Section */}
-              <div className="col-md-4">
-                <img
-                  src="https://via.placeholder.com/150" // Replace this with your image URL
-                  className="img-fluid rounded-circle p-3"
-                  alt="Your Name"
-                />
+              <div className="col-md-4 d-flex justify-content-center">
+                <div
+                  className="position-relative"
+                  style={{
+                    width: '200px', // Set the desired size for the container
+                    height: '200px', // Maintain the same height for circular shape
+                    overflow: 'hidden', // Hide any overflow
+                    borderRadius: '50%', // Create a circular shape
+                  }}
+                >
+                  <img
+                    src={Profile}
+                    className="img-fluid"
+                    alt="Your Name"
+                    style={{
+                      width: '100%', // Make the image take the full width of the container
+                      height: 'auto', // Maintain aspect ratio
+                      position: 'absolute', // Allow for positioning
+                      top: '50%', // Center vertically
+                      left: '50%', // Center horizontally
+                      transform: 'translate(-50%, -50%) scale(1.7)', // Zoom in effect
+                    }}
+                  />
+                </div>
               </div>
+
+
+
 
               {/* Contact Details Section */}
               <div className="col-md-8">
                 <div className="card-body">
-                  <h3 className="card-title">Your Name</h3>
+                  <h3 className="card-title">Manish Kumar Choudhary</h3>
                   <p className="card-text">Backend Developer | Java | Spring Boot</p>
                   <p className="card-text">
                     I am a passionate backend developer specializing in Java and Spring Boot. I love building scalable web applications and exploring new technologies.
@@ -29,7 +51,7 @@ const Contact = () => {
                   {/* Social Media Links */}
                   <div className="d-flex justify-content-start">
                     <a
-                      href="https://www.linkedin.com/in/yourprofile"
+                      href="https://www.linkedin.com/in/manishkumarchoudhary/"
                       className="btn btn-outline-primary btn-sm me-2"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -37,7 +59,7 @@ const Contact = () => {
                       <i className="fab fa-linkedin"></i> LinkedIn
                     </a>
                     <a
-                      href="https://github.com/yourprofile"
+                      href="https://github.com/Manishkumarchoudhary2003"
                       className="btn btn-outline-dark btn-sm me-2"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -45,7 +67,7 @@ const Contact = () => {
                       <i className="fab fa-github"></i> GitHub
                     </a>
                     <a
-                      href="https://yourportfolio.com"
+                      href="https://manish-kumar-choudhary.netlify.app/"
                       className="btn btn-outline-info btn-sm me-2"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -53,7 +75,7 @@ const Contact = () => {
                       <i className="fas fa-briefcase"></i> Portfolio
                     </a>
                     <a
-                      href="mailto:youremail@gmail.com"
+                      href="mailto:cmanishkumar193@gmail.com"
                       className="btn btn-outline-danger btn-sm"
                     >
                       <i className="fas fa-envelope"></i> Email
@@ -63,10 +85,10 @@ const Contact = () => {
                   {/* Extra Info */}
                   <div className="mt-4">
                     <p>
-                      <strong>Phone:</strong> +1234567890
+                      <strong>Phone:</strong> 8955946276
                     </p>
                     <p>
-                      <strong>Location:</strong> Your City, Your Country
+                      <strong>Location:</strong> Jodhpur, Rajasthan
                     </p>
                   </div>
                 </div>
