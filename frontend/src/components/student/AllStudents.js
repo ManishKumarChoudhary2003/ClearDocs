@@ -23,7 +23,9 @@ const AllStudents = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setStudents(response.data || []);
+        // Sort students by studentId or another key to show the newest first
+        const sortedStudents = (response.data || []).sort((a, b) => b.studentId - a.studentId);
+        setStudents(sortedStudents);
       } catch (err) {
         console.error('Error fetching students:', err.response ? err.response.data : err.message);
         setError(err.response?.data?.message || 'Failed to fetch students.');
@@ -63,9 +65,12 @@ const AllStudents = () => {
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">All Students</h2>
-      <button className="btn btn-primary mb-4" onClick={goToAddStudent}>
+      <button className="btn btn-outline-info mb-4 btn-lg shadow-sm" onClick={goToAddStudent}>
         Add Student
       </button>
+
+
+
       {error && <div className="alert alert-danger">{error}</div>}
       {students.length === 0 ? (
         <div className="alert alert-info text-center">No students found.</div>
@@ -75,12 +80,15 @@ const AllStudents = () => {
             <div key={student.studentId} className="col-md-4 mb-4">
               <div className="card shadow" style={{ cursor: 'pointer' }} onClick={() => goToStudentDetails(student.studentId)}>
                 <div className="card-body text-center">
-                  <h5 className="card-title">{student.name}</h5>
-                  <p className="card-text">{student.email}</p>
-                  <p className="card-text">Enrollment: {student.enrollmentNumber}</p>
-                  <div className="d-flex justify-content-around">
+                  <h5 className="card-title mb-3">{student.name}</h5>
+                  <p className="card-text mb-2"><strong>Email:</strong> {student.email}</p>
+                  <p className="card-text"><strong>Enrollment Number:</strong> {student.enrollmentNumber}</p>
+                  <p className="card-text">
+                    <strong>Date of Birth:</strong> {new Date(student.dateOfBirth).toLocaleDateString()}
+                  </p>
+                  <div className="d-flex justify-content-between mt-3">
                     <button
-                      className="btn btn-success btn-sm"
+                      className="btn btn-outline-success btn-sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         goToUpdatePage(student.studentId);
@@ -89,7 +97,7 @@ const AllStudents = () => {
                       Update
                     </button>
                     <button
-                      className="btn btn-danger btn-sm"
+                      className="btn btn-outline-danger btn-sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteStudent(student.studentId);

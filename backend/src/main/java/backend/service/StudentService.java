@@ -60,6 +60,14 @@ public class StudentService {
         return false;
     }
 
+//    public boolean deleteStudent(String enrollmentNumber) {
+//        if (studentRepository.existsByEnrollmentNumber(enrollmentNumber)) {
+//            studentRepository.deleteByEnrollmentNumber(enrollmentNumber);
+//            return true;
+//        }
+//        return false;
+//    }
+
     public List<Student> getAllStudentsByUser(Long userId) {
         Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
         if (platformUser.isPresent()) {

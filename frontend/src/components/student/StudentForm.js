@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const StudentForm = () => {
   const [name, setName] = useState('');
@@ -10,29 +10,28 @@ const StudentForm = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userId = localStorage.getItem("userId"); // Fetch userId from localStorage
-    const token = localStorage.getItem("token"); // Fetch token from localStorage
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
 
-    // Append time 'T00:00:00' to the dateOfBirth to match LocalDateTime format
     const dateOfBirthWithTime = `${dateOfBirth}T00:00:00`;
 
     const studentData = {
       name,
       email,
-      dateOfBirth: dateOfBirthWithTime, // Pass the date with time
+      dateOfBirth: dateOfBirthWithTime,
       enrollmentNumber,
     };
 
     try {
       const response = await axios.post(`http://localhost:8080/student/add/${userId}`, studentData, {
         headers: {
-          Authorization: `Bearer ${token}`, // Include JWT token
-          'Content-Type': 'application/json', // Set content type
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       });
 
@@ -41,16 +40,19 @@ const StudentForm = () => {
         setSuccess('Student added successfully!');
         setError('');
 
-        // Navigate to the all-students route after a successful submission
         setTimeout(() => {
-          navigate('/all-students'); // Navigate to all-students route
-        }, 2000); // 2 seconds delay before navigation
+          navigate('/all-students');
+        }, 2000);
       }
     } catch (error) {
       console.error('Failed to add student', error);
       setError('Failed to add student. Please try again.');
       setSuccess('');
     }
+  };
+
+  const handleBack = () => {
+    navigate(-1); // Navigate back to the previous page
   };
 
   return (
@@ -110,9 +112,15 @@ const StudentForm = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary btn-block">
-                  Add Student
-                </button>
+
+                <div className="d-flex justify-content-between">
+                  <button type="button" className="btn btn-secondary" onClick={handleBack}>
+                    Back
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    Add Student
+                  </button>
+                </div>
               </form>
 
               {error && <div className="alert alert-danger mt-3">{error}</div>}

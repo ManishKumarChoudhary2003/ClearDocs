@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom'; // For navigation
 import APIClient from '../../api/APIClient';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -9,15 +9,15 @@ const Register = () => {
     email: '',
     mobileNumber: '',
     password: '',
-    roles: [], // Initialize roles as an array
+    roles: [], // Store roles as an array
   });
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // Initialize navigate for routing
+  const navigate = useNavigate(); // For navigation
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'roles') {
-      setUser({ ...user, roles: [value] }); // Wrap role in an array
+      setUser({ ...user, roles: [value] }); // Wrap the selected role in an array
     } else {
       setUser({ ...user, [name]: value });
     }
@@ -29,18 +29,14 @@ const Register = () => {
       const response = await APIClient.register(user);
       console.log('API response:', response); // Debugging response
 
-      // Store user ID in localStorage
+      // Store user ID and selected role in localStorage
       localStorage.setItem('userId', response.data.id);
+      localStorage.setItem('userRole', user.roles[0]); // Store selected role
 
       // Set success message
-      setMessage('Registration successful');
+      setMessage('Registration successful! Redirecting to login...');
 
-      // Redirect to login after 2 seconds
-      setTimeout(() => {
-        navigate('/login'); // Navigate to login page
-      }, 2000);
-
-      // Clear form fields
+      // Clear form fields immediately after setting the message
       setUser({
         username: '',
         email: '',
@@ -48,6 +44,12 @@ const Register = () => {
         password: '',
         roles: [],
       });
+
+      // Redirect to login after 2 seconds
+      setTimeout(() => {
+        navigate('/login'); // Navigate to login page
+      }, 2000);
+
     } catch (error) {
       console.log('Error response:', error.response); // Debugging error response
       setMessage('Error registering user: ' + (error.response?.data?.message || error.message));
@@ -55,68 +57,77 @@ const Register = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-      <div className="card" style={{ width: '30rem' }}>
+    <div className="d-flex justify-content-center align-items-center" style={{ height: '90vh', backgroundColor: '#f8f9fa' }}>
+      <div className="card shadow-lg" style={{ width: '30rem' }}>
         <div className="card-body">
-          <h2 className="card-title text-center">Register</h2>
-          {message && <p className="text-center text-success mb-3">{message}</p>} {/* Display message above form */}
+          <h2 className="card-title text-center mb-4">Register</h2>
+          {message && (
+            <div className={`alert ${message.includes('Error') ? 'alert-danger' : 'alert-success'} text-center`}>
+              {message}
+            </div>
+          )} {/* Success or error message */}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Username:</label>
+              <label className="form-label">Username</label>
               <input
                 type="text"
                 name="username"
                 value={user.username}
                 onChange={handleChange}
                 className="form-control"
+                placeholder="Enter username"
                 required
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Email:</label>
+              <label className="form-label">Email</label>
               <input
                 type="email"
                 name="email"
                 value={user.email}
                 onChange={handleChange}
                 className="form-control"
+                placeholder="Enter email"
                 required
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Mobile Number:</label>
+              <label className="form-label">Mobile Number</label>
               <input
                 type="text"
                 name="mobileNumber"
                 value={user.mobileNumber}
                 onChange={handleChange}
                 className="form-control"
+                placeholder="Enter mobile number"
                 required
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Password:</label>
+              <label className="form-label">Password</label>
               <input
                 type="password"
                 name="password"
                 value={user.password}
                 onChange={handleChange}
                 className="form-control"
+                placeholder="Enter password"
                 required
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Roles:</label>
+              <label className="form-label">Role</label>
               <select
                 name="roles"
-                value={user.roles[0]} // Ensure only the first role is displayed
+                value={user.roles[0] || ''} // Ensure only the first role is displayed
                 onChange={handleChange}
                 className="form-select"
                 required
               >
                 <option value="" disabled>Select a role</option>
-                <option value="USER">User</option>
-                <option value="ADMIN">Admin</option>
+                <option value="ROLE_USER">User</option>
+                <option value="ROLE_ADMIN">Admin</option>
+                <option value="ROLE_STUDENT">Student</option>
               </select>
             </div>
             <button type="submit" className="btn btn-primary w-100">Register</button>

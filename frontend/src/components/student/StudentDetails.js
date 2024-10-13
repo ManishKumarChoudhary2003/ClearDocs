@@ -83,13 +83,18 @@ const StudentDetails = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
+
       setSuccessMessage('Document uploaded successfully!');
       setShowModal(false);
-      setDocuments([...documents, { documentType, documentName: file.name, fileSize: `${(file.size / 1024).toFixed(2)} KB` }]);
+
+      // Add the new document at the beginning of the list
+      setDocuments([{ documentType, documentName: file.name, fileSize: `${(file.size / 1024).toFixed(2)} KB` }, ...documents]);
 
       setTimeout(() => {
         setSuccessMessage('');
       }, 1000);
+
+      // Optionally reload the page if necessary
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -99,6 +104,7 @@ const StudentDetails = () => {
       setError('Failed to upload document.');
     }
   };
+
 
   // Function to download a document
   const downloadDocument = async (documentId, documentName) => {
@@ -193,10 +199,12 @@ const StudentDetails = () => {
                     onChange={(e) => setDocumentType(e.target.value)}
                     required
                   >
-                    <option value="">Select Document Type</option>
-                    <option value="Type 1">Type 1</option>
-                    <option value="Type 2">Type 2</option>
-                    <option value="Type 3">Type 3</option>
+                    <option value="" disabled>Select Document Type</option>
+                    <option value="Marksheet">Marksheet</option>
+                    <option value="Receipt">Receipt</option>
+                    <option value="Notice">Notice</option>
+                    <option value="Certificate">Certificate</option>
+                    <option value="ID Proof">ID Proof</option>
                   </select>
                 </div>
                 <div className="mb-3">

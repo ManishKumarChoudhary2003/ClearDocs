@@ -32,7 +32,7 @@ const Login = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center" style={{ height: '30vh', marginTop: '100px' }}>
+    <div className="d-flex justify-content-center" style={{ height: '40vh', marginTop: '100px' }}>
       <div className="card" style={{ width: '30rem' }}>
         <div className="card-body">
           <h2 className="card-title text-center">Login</h2>

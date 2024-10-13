@@ -10,6 +10,7 @@ import AllStudents from './components/student/AllStudents'; // Ensure the correc
 import StudentDetails from './components/student/StudentDetails'; // Ensure the correct import path
 import UpdateStudent from './components/student/UpdateStudent'; // Ensure the correct import path
 import UploadDocument from './components/document/UploadDocument';
+import Logout from './components/auth/Logout';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/all-students" element={<AllStudents />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
           </Routes>
         </div>
       </div>

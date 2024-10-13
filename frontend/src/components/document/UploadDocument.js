@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom'; // Updated import
+import { useParams, useNavigate } from 'react-router-dom';
 
 const UploadDocument = () => {
     const { studentId } = useParams();
-    const navigate = useNavigate(); // Updated hook
+    const navigate = useNavigate();
     const [documentType, setDocumentType] = useState('');
     const [file, setFile] = useState(null);
     const [error, setError] = useState('');
@@ -33,7 +33,7 @@ const UploadDocument = () => {
                 },
             });
             // Redirect to student details after upload
-            navigate(`/student/${studentId}`); // Updated navigation
+            navigate(`/student/${studentId}`);
         } catch (err) {
             console.error('Error uploading document:', err.response ? err.response.data : err.message);
             setError('Failed to upload document.');
@@ -47,14 +47,20 @@ const UploadDocument = () => {
             <form onSubmit={uploadDocument} className="mb-4">
                 <div className="form-group">
                     <label htmlFor="documentType">Document Type:</label>
-                    <input
-                        type="text"
+                    <select
                         id="documentType"
                         className="form-control"
                         value={documentType}
                         onChange={handleDocumentTypeChange}
-                        required
-                    />
+                    >
+                        <option value="" disabled>Select Document Type</option>
+                        <option value="Marksheet">Marksheet</option>
+                        <option value="Receipt">Receipt</option>
+                        <option value="Notice">Notice</option>
+                        <option value="Certificate">Certificate</option>
+                        <option value="ID Proof">ID Proof</option>
+                    </select>
+
                 </div>
                 <div className="form-group">
                     <label htmlFor="file">Upload Document:</label>

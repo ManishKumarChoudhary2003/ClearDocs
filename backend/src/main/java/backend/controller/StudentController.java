@@ -63,7 +63,18 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+//    @DeleteMapping("/delete/{enrollmentNumber}")
+//    public ResponseEntity<Void> deleteStudent(@PathVariable String enrollmentNumber) {
+//        boolean isDeleted = studentService.deleteStudent(enrollmentNumber);
+//        if (isDeleted) {
+//            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+//        }
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//    }
+
+
+
+    //    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Student>> getAllStudentsByUser(@PathVariable Long userId) {
 
