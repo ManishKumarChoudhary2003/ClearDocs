@@ -29,9 +29,15 @@ const Register = () => {
       const response = await APIClient.register(user);
       console.log('API response:', response); // Debugging response
 
-      // Store user ID and selected role in localStorage
-      localStorage.setItem('userId', response.data.id);
-      localStorage.setItem('userRole', user.roles[0]); // Store selected role
+      // Store user ID in localStorage
+
+      localStorage.setItem('userRole', user.roles[0]);
+      // If the role is ROLE_STUDENT, store studentId instead
+      if (user.roles[0] === 'ROLE_STUDENT') {
+        localStorage.setItem('studentId', response.data.id); // Store student ID
+      } else {
+        localStorage.setItem('userId', response.data.id);
+      }
 
       // Set success message
       setMessage('Registration successful! Redirecting to login...');

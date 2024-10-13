@@ -24,4 +24,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Modifying
     @Query("DELETE FROM Student s WHERE s.enrollmentNumber = ?1")
     void deleteByEnrollmentNumber(String enrollmentNumber);
+
+    Optional<Student> findByEmailAndPlatformUser(String email, PlatformUser platformUser);
 }

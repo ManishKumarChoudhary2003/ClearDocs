@@ -33,6 +33,16 @@ public class DocumentController {
         return ResponseEntity.ok(documents);
     }
 
+
+    @GetMapping("/student-documents")
+    public ResponseEntity<List<Documents>> getDocumentsByEmailAndUserId(
+            @RequestParam String email,
+            @RequestParam Long userId) {
+        List<Documents> documents = documentService.getDocumentsByEmailAndUserId(email, userId);
+        return ResponseEntity.ok(documents);
+    }
+
+
     @DeleteMapping("/{documentId}")
     public ResponseEntity<Void> deleteDocument(@PathVariable Long documentId) {
         documentService.deleteDocument(documentId);

@@ -1,8 +1,10 @@
 package backend.service;
 
 import backend.entity.Documents;
+import backend.entity.PlatformUser;
 import backend.entity.Student;
 import backend.repository.DocumentRepository;
+import backend.repository.PlatformUserRepository;
 import backend.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class DocumentService {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private PlatformUserRepository platformUserRepository;
 
     public Documents addDocument(Long studentId, MultipartFile file, String documentType) {
         Optional<Student> studentOptional = studentRepository.findById(studentId);
@@ -60,6 +65,16 @@ public class DocumentService {
         }
 
         return studentOptional.get().getDocuments().stream().toList();
+    }
+
+    public List<Documents> getDocumentsByEmailAndUserId(String email, Long userId) {
+        PlatformUser platformUser = platformUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
+        Student student = studentRepository.findByEmailAndPlatformUser(email, platformUser)
+                .orElseThrow(() -> new IllegalArgumentException("No student found with the given email and user ID"));
+
+        return documentRepository.findByStudent(student);
     }
 
     public Documents getDocumentById(Long documentId) {

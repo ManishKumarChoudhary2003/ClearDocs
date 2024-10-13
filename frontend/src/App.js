@@ -11,6 +11,7 @@ import StudentDetails from './components/student/StudentDetails'; // Ensure the 
 import UpdateStudent from './components/student/UpdateStudent'; // Ensure the correct import path
 import UploadDocument from './components/document/UploadDocument';
 import Logout from './components/auth/Logout';
+import StudentDocuments from './components/student/StudentDocuments';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/update-student/:studentId" element={<UpdateStudent />} />
             <Route path="/register" element={<Register />} />
             <Route path="/all-students" element={<AllStudents />} />
+            <Route path="/student-documents" element={<StudentDocuments />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
           </Routes>

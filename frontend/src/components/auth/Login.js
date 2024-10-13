@@ -19,12 +19,14 @@ const Login = () => {
       const response = await APIClient.login(authRequest);
 
       localStorage.setItem('token', response.data);
+      localStorage.setItem('email', authRequest.email);
       setMessage('Login successful!');
 
       // Redirect to home route after login
       setTimeout(() => {
-        navigate('/'); // Redirect to the '/' route
-      }, 2000);
+        navigate('/');
+        window.location.reload();
+      }, 1000);
 
     } catch (error) {
       setMessage('Error logging in: ' + (error.response?.data?.message || error.message));

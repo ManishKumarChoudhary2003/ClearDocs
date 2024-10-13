@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
@@ -10,6 +10,21 @@ const Navbar = () => {
   const [file, setFile] = useState(null);
   const [verificationResult, setVerificationResult] = useState('');
   const [error, setError] = useState('');
+
+  const [userRole, setUserRole] = useState('');
+  const [isAuthenticated, setAuthenticated] = useState(false);
+
+  // Retrieve the user role and authentication token from localStorage when the component mounts
+  useEffect(() => {
+    const storedRole = localStorage.getItem('userRole');
+    const authToken = localStorage.getItem("token");
+    if (authToken) {
+      setAuthenticated(true);
+    }
+    if (storedRole) {
+      setUserRole(storedRole);
+    }
+  }, []);
 
   // Handle file upload
   const handleFileChange = (e) => {
@@ -63,33 +78,48 @@ const Navbar = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/">Home</Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/all-students">All Students</Link>
-              </li>
+              {userRole === 'ROLE_STUDENT' && <li className="nav-item">
+                <Link className="nav-link" to="/student-documents">Documents</Link>
+              </li>}
               <li className="nav-item">
                 <Link className="nav-link" to="/contact">Contact</Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/register">Register</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">Login</Link>
-              </li>
-              <li className="nav-item">
-                {/* Styled as a link instead of a button */}
-                <a href="#!" className="nav-link" onClick={() => setShowVerifyModal(true)}>
-                  Verify Document
-                </a>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/logout">Logout</Link>
-              </li>
+              {userRole === 'ROLE_ADMIN' && (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/all-students">Students</Link>
+                </li>
+              )}
+              {userRole === 'ROLE_ADMIN' || userRole === 'ROLE_USER' ? (
+                <li className="nav-item">
+                  <a href="#!" className="nav-link" onClick={() => setShowVerifyModal(true)}>
+                    Verify Document
+                  </a>
+                </li>
+              ) : null}
+
+              {/* Conditional rendering for Register and Login based on authentication */}
+              {!isAuthenticated && (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/register">Register</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/login">Login</Link>
+                  </li>
+                </>
+              )}
+
+              {isAuthenticated && (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/logout">Logout</Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>
       </nav>
 
-      {/* Verify Document Modal */}
+      {/* Verification Modal */}
       <Modal show={showVerifyModal} onHide={() => setShowVerifyModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Verify Document</Modal.Title>

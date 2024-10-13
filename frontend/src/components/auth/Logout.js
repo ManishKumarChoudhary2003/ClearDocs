@@ -13,17 +13,21 @@ const Logout = () => {
 
         // Redirect to the login page after clearing the token
         navigate('/');
+        window.location.reload();
     };
 
     // Function to handle account deletion (remove all data)
     const handleDeleteAccount = () => {
         // Remove all user details from localStorage
         localStorage.removeItem('userId');
+        localStorage.removeItem('studentId');
         localStorage.removeItem('userRole');
         localStorage.removeItem('token');
+        localStorage.removeItem('email');
 
         // Redirect to the login page after clearing all data
         navigate('/');
+        window.location.reload();
     };
 
     // Function to close the confirmation popup without logging out
