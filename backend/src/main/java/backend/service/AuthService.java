@@ -16,12 +16,16 @@ public class AuthService {
     @Autowired
     private EmailService emailService;
 
+//    @Autowired
+//    private KafkaTemplate<String, String> kafkaTemplate;
+
     @Autowired
     private JwtService jwtService;
 
     public PlatformUser saveUser(PlatformUser platformUser) {
         platformUser.setPassword(passwordEncoder.encode(platformUser.getPassword()));
         PlatformUser savedUser = repository.save(platformUser);
+//        kafkaTemplate.send(TOPIC, event);
         emailService.sendRegistrationSuccessEmail(platformUser);
         return savedUser;
     }
@@ -31,7 +35,4 @@ public class AuthService {
         return jwtService.generateToken(email, platformUser.getRoles());
     }
 
-//    public void validateToken(String token) {
-//        jwtService.validateToken(token);
-//    }
 }

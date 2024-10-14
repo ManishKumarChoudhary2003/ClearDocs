@@ -31,8 +31,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> getToken(@RequestBody AuthRequestDTO authRequestDTO) {
-//        System.out.println("login api:::");
-
         try {
             Authentication authenticate = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword())
@@ -51,10 +49,4 @@ public class AuthController {
         }
     }
 
-
-//    @GetMapping("/validate")
-//    public String validateToken(@RequestParam("token") String token) {
-//        service.validateToken(token);
-//        return "Token is valid";
-//    }
 }

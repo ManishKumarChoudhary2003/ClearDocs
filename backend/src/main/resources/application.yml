@@ -12,3 +12,16 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: manishkchoudhary9650@gmail.com
+    password: ejaszgymhoqaneao
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true

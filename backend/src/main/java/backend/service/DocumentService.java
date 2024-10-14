@@ -31,6 +31,9 @@ public class DocumentService {
     @Autowired
     private PlatformUserRepository platformUserRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public Documents addDocument(Long studentId, MultipartFile file, String documentType) {
         Optional<Student> studentOptional = studentRepository.findById(studentId);
         if (studentOptional.isEmpty()) {
@@ -54,6 +57,8 @@ public class DocumentService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to read file content", e);
         }
+
+        emailService.sendDocumentUploadedEmailToStudent(student.getEmail(), documentType);
 
         return documentRepository.save(document);
     }
@@ -90,6 +95,7 @@ public class DocumentService {
         Documents document = documentOptional.get();
         Student student = document.getStudent();
         student.getDocuments().remove(document);
+        emailService.sendDocumentDeletedEmailToStudent(student.getEmail(), document.getDocumentType());
         studentRepository.save(student);
     }
 
@@ -132,7 +138,12 @@ public class DocumentService {
         boolean documentExists = student.getDocuments().stream()
                 .anyMatch(doc -> doc.getHashCode().equals(fileHash));
 
-        return documentExists ? "Document is verified." : "Document is not verified.";
+        if (documentExists) {
+            emailService.sendDocumentVerifiedEmailToStudent(student.getEmail(), file.getOriginalFilename());
+            return "Document is verified.";
+        } else {
+            return "Document is not verified.";
+        }
     }
 
 

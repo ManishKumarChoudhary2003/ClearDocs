@@ -19,6 +19,9 @@ public class StudentService {
     @Autowired
     private PlatformUserRepository platformUserRepository;
 
+    @Autowired
+    private EmailService emailService;
+
 
     public Student addStudent(Student student, Long userId) {
         Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
@@ -30,6 +33,7 @@ public class StudentService {
             }
 
             student.setPlatformUser(platformUser.get());
+            emailService.sendRegistrationSuccessEmailToStudent(student.getEmail(), student.getEnrollmentNumber());
             return studentRepository.save(student);
         }
         return null;
@@ -47,18 +51,24 @@ public class StudentService {
             student.setEmail(studentDetails.getEmail());
             student.setDateOfBirth(studentDetails.getDateOfBirth());
             student.setEnrollmentNumber(studentDetails.getEnrollmentNumber());
+
+            emailService.sendUpdationEmailToStudent(student.getEmail());
             return studentRepository.save(student);
         }
         return null;
     }
 
     public boolean deleteStudent(Long studentId) {
-        if (studentRepository.existsById(studentId)) {
+        Optional<Student> studentOptional = studentRepository.findById(studentId);
+        if (studentOptional.isPresent()) {
+            emailService.sendDeletionEmailToStudent(studentOptional.get().getEmail());
             studentRepository.deleteById(studentId);
             return true;
         }
+
         return false;
     }
+
 
 //    public boolean deleteStudent(String enrollmentNumber) {
 //        if (studentRepository.existsByEnrollmentNumber(enrollmentNumber)) {
