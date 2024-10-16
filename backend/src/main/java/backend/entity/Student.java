@@ -16,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(exclude = {"platformUser", "documents"})
+//@Document(indexName = "students")
 public class Student {
 
     @Id

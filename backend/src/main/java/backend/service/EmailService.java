@@ -85,7 +85,7 @@ public class EmailService {
                         "If this was a mistake or you have any concerns, please contact our support team for assistance.\n\n" +
                         "Best regards,\n" +
                         "The Clear Docs Team\n\n" +
-                        "Support: support@cleardocs.com | Phone: 8955946276"
+                        "Support: cmanishkumar193@gmail.com | Phone: 8955946276"
         );
 
         EmailRequestDTO emailRequest = new EmailRequestDTO();
@@ -103,7 +103,7 @@ public class EmailService {
                         "If you have any questions, feel free to contact us.\n\n" +
                         "Best regards,\n" +
                         "The Clear Docs Team\n\n" +
-                        "Support: support@cleardocs.com | Phone: 8955946276",
+                        "Support: cmanishkumar193@gmail.com | Phone: 8955946276",
                 documentType
         );
 
@@ -122,7 +122,7 @@ public class EmailService {
                         "If you have any questions or need further assistance, please don't hesitate to reach out.\n\n" +
                         "Best regards,\n" +
                         "The Clear Docs Team\n\n" +
-                        "Support: support@cleardocs.com | Phone: 8955946276",
+                        "Support: cmanishkumar193@gmail.com | Phone: 8955946276",
                 documentType
         );
 
@@ -141,7 +141,7 @@ public class EmailService {
                         "If you have any questions or need further assistance, please don't hesitate to reach out.\n\n" +
                         "Best regards,\n" +
                         "The Clear Docs Team\n\n" +
-                        "Support: support@cleardocs.com | Phone: 8955946276",
+                        "Support: cmanishkumar193@gmail.com | Phone: 8955946276",
                 documentName
         );
 

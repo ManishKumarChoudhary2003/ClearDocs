@@ -2,7 +2,10 @@ package backend.service;
 
 import backend.entity.PlatformUser;
 import backend.repository.PlatformUserRepository;
+import backend.utils.KafkaConstants;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +19,40 @@ public class AuthService {
     @Autowired
     private EmailService emailService;
 
-//    @Autowired
-//    private KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     public PlatformUser saveUser(PlatformUser platformUser) {
         platformUser.setPassword(passwordEncoder.encode(platformUser.getPassword()));
         PlatformUser savedUser = repository.save(platformUser);
-//        kafkaTemplate.send(TOPIC, event);
-        emailService.sendRegistrationSuccessEmail(platformUser);
+
+        try {
+            String userJson = objectMapper.writeValueAsString(savedUser);
+
+            kafkaTemplate.send(KafkaConstants.REGISTRATION_TOPIC, userJson);
+
+            System.out.println("Sent user registration data to Kafka topic: " + savedUser.getEmail());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return savedUser;
     }
+
+
+//    public PlatformUser saveUser(PlatformUser platformUser) {
+//        platformUser.setPassword(passwordEncoder.encode(platformUser.getPassword()));
+//        PlatformUser savedUser = repository.save(platformUser);
+//        kafkaTemplate.send(KafkaConstants.REGISTRATION_TOPIC, savedUser.getEmail());
+////        emailService.sendRegistrationSuccessEmail(platformUser);
+//        return savedUser;
+//    }
 
     public String generateToken(String email) {
         PlatformUser platformUser = repository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));

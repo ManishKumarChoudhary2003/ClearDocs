@@ -3,6 +3,7 @@ package backend.service;
 import backend.entity.PlatformUser;
 import backend.entity.Student;
 import backend.repository.PlatformUserRepository;
+//import backend.repository.StudentElasticsearchRepository;
 import backend.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,64 @@ public class StudentService {
 
     @Autowired
     private EmailService emailService;
+
+//    @Autowired
+//    private StudentElasticsearchRepository studentElasticsearchRepository;
+
+
+//    public Student addStudent(Student student, Long userId) {
+//        Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
+//
+//        if (platformUser.isPresent()) {
+//            // Check if the student already exists by enrollment number
+//            if (studentElasticsearchRepository.existsByEnrollmentNumber(student.getEnrollmentNumber())) {
+//                throw new IllegalArgumentException("Student with this enrollment number already exists.");
+//            }
+//
+//            student.setPlatformUser(platformUser.get());
+//            emailService.sendRegistrationSuccessEmailToStudent(student.getEmail(), student.getEnrollmentNumber());
+//            return studentElasticsearchRepository.save(student);
+//        }
+//        return null;
+//    }
+//
+//    public Optional<Student> findStudentById(Long studentId) {
+//        return studentElasticsearchRepository.findById(studentId);
+//    }
+//
+//    public Student updateStudent(Long studentId, Student studentDetails) {
+//        Optional<Student> studentOptional = studentElasticsearchRepository.findById(studentId);
+//        if (studentOptional.isPresent()) {
+//            Student student = studentOptional.get();
+//            student.setName(studentDetails.getName());
+//            student.setEmail(studentDetails.getEmail());
+//            student.setDateOfBirth(studentDetails.getDateOfBirth());
+//            student.setEnrollmentNumber(studentDetails.getEnrollmentNumber());
+//
+//            emailService.sendUpdationEmailToStudent(student.getEmail());
+//            return studentElasticsearchRepository.save(student);
+//        }
+//        return null;
+//    }
+//
+//    public boolean deleteStudent(Long studentId) {
+//        Optional<Student> studentOptional = studentElasticsearchRepository.findById(studentId);
+//        if (studentOptional.isPresent()) {
+//            emailService.sendDeletionEmailToStudent(studentOptional.get().getEmail());
+//            studentElasticsearchRepository.deleteById(studentId);
+//            return true;
+//        }
+//
+//        return false;
+//    }
+//
+//    public List<Student> getAllStudentsByUser(Long userId) {
+//        Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
+//        if (platformUser.isPresent()) {
+//            return studentElasticsearchRepository.findAllByPlatformUser(platformUser.get());
+//        }
+//        return List.of();
+//    }
 
 
     public Student addStudent(Student student, Long userId) {

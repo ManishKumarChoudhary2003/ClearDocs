@@ -13,11 +13,23 @@ spring:
     hibernate:
       ddl-auto: update
 
+
+#  elasticsearch:
+#    rest:
+#      uris: http://localhost:9200
+#    indices:
+#      create: true
+
+
+
+
+
   mail:
     host: smtp.gmail.com
     port: 587
     username: manishkchoudhary9650@gmail.com
-    password: ejaszgymhoqaneao
+#    password: ejaszgymhoqaneao
+    password: fqujsdfvrtczsmch
     properties:
       mail:
         smtp:
