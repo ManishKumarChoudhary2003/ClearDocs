@@ -13,6 +13,12 @@ spring:
     hibernate:
       ddl-auto: update
 
+  data:
+    solr:
+      host: http://localhost:8983/solr
+      repositories:
+        enabled: true
+      core: ClearStudent
 
 #  elasticsearch:
 #    rest:

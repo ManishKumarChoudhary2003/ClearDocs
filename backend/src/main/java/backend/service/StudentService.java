@@ -2,9 +2,12 @@ package backend.service;
 
 import backend.entity.PlatformUser;
 import backend.entity.Student;
+import backend.messaging.KafkaProducer;
 import backend.repository.PlatformUserRepository;
 //import backend.repository.StudentElasticsearchRepository;
 import backend.repository.StudentRepository;
+import backend.repository.StudentSolrRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +24,14 @@ public class StudentService {
     private PlatformUserRepository platformUserRepository;
 
     @Autowired
-    private EmailService emailService;
+    private KafkaProducer kafkaProducer;
+
+    @Autowired
+    private StudentSolrRepository studentSolrRepository;
+
+    public List<Student> searchStudents(String name, String enrollmentNumber, String email) {
+        return studentSolrRepository.findByNameOrEnrollmentNumberOrEmail(name, enrollmentNumber, email);
+    }
 
 //    @Autowired
 //    private StudentElasticsearchRepository studentElasticsearchRepository;
@@ -82,6 +92,7 @@ public class StudentService {
 //    }
 
 
+    @Transactional
     public Student addStudent(Student student, Long userId) {
         Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
 
@@ -91,8 +102,11 @@ public class StudentService {
                 throw new IllegalArgumentException("Student with this enrollment number already exists.");
             }
 
-            student.setPlatformUser(platformUser.get());
-            emailService.sendRegistrationSuccessEmailToStudent(student.getEmail(), student.getEnrollmentNumber());
+            Student savedStudent = studentRepository.save(student);
+            studentSolrRepository.save(savedStudent);
+            if (kafkaProducer != null){
+                kafkaProducer.producerForStudentRegistration(student.getEmail(), student.getEnrollmentNumber());
+            }
             return studentRepository.save(student);
         }
         return null;
@@ -111,7 +125,9 @@ public class StudentService {
             student.setDateOfBirth(studentDetails.getDateOfBirth());
             student.setEnrollmentNumber(studentDetails.getEnrollmentNumber());
 
-            emailService.sendUpdationEmailToStudent(student.getEmail());
+            if (kafkaProducer != null){
+                kafkaProducer.producerForStudentUpdation(student.getEmail());
+            }
             return studentRepository.save(student);
         }
         return null;
@@ -120,7 +136,9 @@ public class StudentService {
     public boolean deleteStudent(Long studentId) {
         Optional<Student> studentOptional = studentRepository.findById(studentId);
         if (studentOptional.isPresent()) {
-            emailService.sendDeletionEmailToStudent(studentOptional.get().getEmail());
+            if (kafkaProducer != null){
+                kafkaProducer.producerForStudentDeletion(studentOptional.get().getEmail());
+            }
             studentRepository.deleteById(studentId);
             return true;
         }

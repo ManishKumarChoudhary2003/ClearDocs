@@ -23,16 +23,39 @@ const Register = () => {
     }
   };
 
+  const validateMobileNumber = (mobileNumber) => {
+    // Check if the mobile number is exactly 10 digits
+    const mobileNumberRegex = /^\d{10}$/;
+    return mobileNumberRegex.test(mobileNumber);
+  };
+
+  const validatePassword = (password) => {
+    // Ensure password is at least 8 characters long and contains at least one special character
+    const passwordRegex = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Mobile number validation
+    if (!validateMobileNumber(user.mobileNumber)) {
+      setMessage('Mobile number must be exactly 10 digits.');
+      return;
+    }
+
+    // Password validation
+    if (!validatePassword(user.password)) {
+      setMessage('Password must be at least 8 characters long and contain at least one special character.');
+      return;
+    }
+
     try {
       const response = await APIClient.register(user);
       console.log('API response:', response); // Debugging response
 
       // Store user ID in localStorage
-
       localStorage.setItem('userRole', user.roles[0]);
-      // If the role is ROLE_STUDENT, store studentId instead
       if (user.roles[0] === 'ROLE_STUDENT') {
         localStorage.setItem('studentId', response.data.id); // Store student ID
       } else {
@@ -55,7 +78,6 @@ const Register = () => {
       setTimeout(() => {
         navigate('/login'); // Navigate to login page
       }, 2000);
-
     } catch (error) {
       console.log('Error response:', error.response); // Debugging error response
       setMessage('Error registering user: ' + (error.response?.data?.message || error.message));

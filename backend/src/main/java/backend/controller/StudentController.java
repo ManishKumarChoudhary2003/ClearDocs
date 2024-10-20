@@ -21,6 +21,16 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Student>> searchStudents(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String enrollmentNumber,
+            @RequestParam(required = false) String email) {
+
+        List<Student> students = studentService.searchStudents(name, enrollmentNumber, email);
+        return ResponseEntity.ok(students);
+    }
+
 //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add/{userId}")
     public ResponseEntity<Student> addStudent(@RequestBody Student student, @PathVariable Long userId) {

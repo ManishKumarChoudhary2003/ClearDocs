@@ -19,9 +19,9 @@ const Logout = () => {
     // Function to handle account deletion (remove all data)
     const handleDeleteAccount = () => {
         // Remove all user details from localStorage
-        localStorage.removeItem('userId');
-        localStorage.removeItem('studentId');
-        localStorage.removeItem('userRole');
+        // localStorage.removeItem('userId');
+        // localStorage.removeItem('studentId');
+        // localStorage.removeItem('userRole');
         localStorage.removeItem('token');
         localStorage.removeItem('email');
 

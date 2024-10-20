@@ -3,6 +3,7 @@ package backend.service;
 import backend.entity.Documents;
 import backend.entity.PlatformUser;
 import backend.entity.Student;
+import backend.messaging.KafkaProducer;
 import backend.repository.DocumentRepository;
 import backend.repository.PlatformUserRepository;
 import backend.repository.StudentRepository;
@@ -32,7 +33,7 @@ public class DocumentService {
     private PlatformUserRepository platformUserRepository;
 
     @Autowired
-    private EmailService emailService;
+    private KafkaProducer kafkaProducer;
 
     public Documents addDocument(Long studentId, MultipartFile file, String documentType) {
         Optional<Student> studentOptional = studentRepository.findById(studentId);
@@ -58,7 +59,9 @@ public class DocumentService {
             throw new RuntimeException("Failed to read file content", e);
         }
 
-        emailService.sendDocumentUploadedEmailToStudent(student.getEmail(), documentType);
+        if (kafkaProducer != null){
+            kafkaProducer.producerForDocumentUpload(student.getEmail(), documentType);
+        }
 
         return documentRepository.save(document);
     }
@@ -95,7 +98,9 @@ public class DocumentService {
         Documents document = documentOptional.get();
         Student student = document.getStudent();
         student.getDocuments().remove(document);
-        emailService.sendDocumentDeletedEmailToStudent(student.getEmail(), document.getDocumentType());
+        if (kafkaProducer != null){
+            kafkaProducer.producerForDocumentDeletion(student.getEmail(), document.getDocumentType());
+        }
         studentRepository.save(student);
     }
 
@@ -139,7 +144,9 @@ public class DocumentService {
                 .anyMatch(doc -> doc.getHashCode().equals(fileHash));
 
         if (documentExists) {
-            emailService.sendDocumentVerifiedEmailToStudent(student.getEmail(), file.getOriginalFilename());
+            if (kafkaProducer != null){
+                kafkaProducer.producerForDocumentVerification(student.getEmail(), file.getOriginalFilename());
+            }
             return "Document is verified.";
         } else {
             return "Document is not verified.";
