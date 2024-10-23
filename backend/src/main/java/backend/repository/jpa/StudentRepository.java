@@ -1,4 +1,4 @@
-package backend.repository;
+package backend.repository.jpa;
 
 import backend.entity.PlatformUser;
 import backend.entity.Student;

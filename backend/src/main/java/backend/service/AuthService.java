@@ -2,11 +2,8 @@ package backend.service;
 
 import backend.entity.PlatformUser;
 import backend.messaging.KafkaProducer;
-import backend.repository.PlatformUserRepository;
-import backend.utils.KafkaConstants;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import backend.repository.jpa.PlatformUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -1,16 +1,18 @@
 package backend.service;
 
+import backend.entity.ClearStudent;
 import backend.entity.PlatformUser;
 import backend.entity.Student;
 import backend.messaging.KafkaProducer;
-import backend.repository.PlatformUserRepository;
+import backend.repository.jpa.PlatformUserRepository;
 //import backend.repository.StudentElasticsearchRepository;
-import backend.repository.StudentRepository;
-import backend.repository.StudentSolrRepository;
+import backend.repository.jpa.StudentRepository;
+import backend.repository.solr.StudentSolrRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,81 +31,27 @@ public class StudentService {
     @Autowired
     private StudentSolrRepository studentSolrRepository;
 
-    public List<Student> searchStudents(String name, String enrollmentNumber, String email) {
-        return studentSolrRepository.findByNameOrEnrollmentNumberOrEmail(name, enrollmentNumber, email);
-    }
-
-//    @Autowired
-//    private StudentElasticsearchRepository studentElasticsearchRepository;
-
-
-//    public Student addStudent(Student student, Long userId) {
-//        Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
-//
-//        if (platformUser.isPresent()) {
-//            // Check if the student already exists by enrollment number
-//            if (studentElasticsearchRepository.existsByEnrollmentNumber(student.getEnrollmentNumber())) {
-//                throw new IllegalArgumentException("Student with this enrollment number already exists.");
-//            }
-//
-//            student.setPlatformUser(platformUser.get());
-//            emailService.sendRegistrationSuccessEmailToStudent(student.getEmail(), student.getEnrollmentNumber());
-//            return studentElasticsearchRepository.save(student);
-//        }
-//        return null;
+//    public List<Student> searchStudents(String name, String enrollmentNumber, String email) {
+//        return studentSolrRepository.findByNameOrEnrollmentNumberOrEmail(name, enrollmentNumber, email);
 //    }
-//
-//    public Optional<Student> findStudentById(Long studentId) {
-//        return studentElasticsearchRepository.findById(studentId);
-//    }
-//
-//    public Student updateStudent(Long studentId, Student studentDetails) {
-//        Optional<Student> studentOptional = studentElasticsearchRepository.findById(studentId);
-//        if (studentOptional.isPresent()) {
-//            Student student = studentOptional.get();
-//            student.setName(studentDetails.getName());
-//            student.setEmail(studentDetails.getEmail());
-//            student.setDateOfBirth(studentDetails.getDateOfBirth());
-//            student.setEnrollmentNumber(studentDetails.getEnrollmentNumber());
-//
-//            emailService.sendUpdationEmailToStudent(student.getEmail());
-//            return studentElasticsearchRepository.save(student);
-//        }
-//        return null;
-//    }
-//
-//    public boolean deleteStudent(Long studentId) {
-//        Optional<Student> studentOptional = studentElasticsearchRepository.findById(studentId);
-//        if (studentOptional.isPresent()) {
-//            emailService.sendDeletionEmailToStudent(studentOptional.get().getEmail());
-//            studentElasticsearchRepository.deleteById(studentId);
-//            return true;
-//        }
-//
-//        return false;
-//    }
-//
-//    public List<Student> getAllStudentsByUser(Long userId) {
-//        Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
-//        if (platformUser.isPresent()) {
-//            return studentElasticsearchRepository.findAllByPlatformUser(platformUser.get());
-//        }
-//        return List.of();
-//    }
-
 
     @Transactional
     public Student addStudent(Student student, Long userId) {
         Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
 
         if (platformUser.isPresent()) {
-            // Check if the student already exists by enrollment number
             if (studentRepository.existsByEnrollmentNumber(student.getEnrollmentNumber())) {
                 throw new IllegalArgumentException("Student with this enrollment number already exists.");
             }
 
-            Student savedStudent = studentRepository.save(student);
-            studentSolrRepository.save(savedStudent);
+//            Student savedStudent = studentRepository.save(student);
+            ClearStudent clearStudent = new ClearStudent();
+            clearStudent.setName(student.getName());
+            clearStudent.setEmail(student.getEmail());
+            clearStudent.setDateOfBirth(student.getDateOfBirth());
+            clearStudent.setEnrollmentNumber(student.getEnrollmentNumber());
+            clearStudent.setPlatformUser(platformUser.get());
+            studentSolrRepository.save(clearStudent, Duration.ofSeconds(2));
             if (kafkaProducer != null){
                 kafkaProducer.producerForStudentRegistration(student.getEmail(), student.getEnrollmentNumber());
             }

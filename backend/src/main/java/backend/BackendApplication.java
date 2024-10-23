@@ -2,10 +2,11 @@ package backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 
 @SpringBootApplication
-@EnableSolrRepositories(basePackages = "backend.repository")
+@EnableJpaRepositories(basePackages = "backend.repository.jpa")
 public class BackendApplication {
 
 	public static void main(String[] args) {

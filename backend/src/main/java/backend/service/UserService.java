@@ -1,7 +1,7 @@
 package backend.service;
 
 import backend.entity.PlatformUser;
-import backend.repository.PlatformUserRepository;
+import backend.repository.jpa.PlatformUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

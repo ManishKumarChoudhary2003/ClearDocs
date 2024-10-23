@@ -18,9 +18,10 @@ spring:
       host: http://localhost:8983/solr
       repositories:
         enabled: true
-      core: ClearStudent
+      core:
+        name: ClearStudent
 
-#  elasticsearch:
+  #  elasticsearch:
 #    rest:
 #      uris: http://localhost:9200
 #    indices:
@@ -43,3 +44,8 @@ spring:
           starttls:
             enable: true
             required: true
+
+logging:
+  level:
+    org:
+      springframework=DEBUG:
