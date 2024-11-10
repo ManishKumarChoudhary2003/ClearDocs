@@ -22,7 +22,6 @@ const Login = () => {
       localStorage.setItem('email', authRequest.email);
       setMessage('Login successful!');
 
-      // Redirect to home route after login
       setTimeout(() => {
         navigate('/');
         window.location.reload();

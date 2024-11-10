@@ -1,13 +1,11 @@
 package backend.service;
 
-import backend.entity.ClearStudent;
 import backend.entity.PlatformUser;
 import backend.entity.Student;
 import backend.messaging.KafkaProducer;
 import backend.repository.jpa.PlatformUserRepository;
 //import backend.repository.StudentElasticsearchRepository;
 import backend.repository.jpa.StudentRepository;
-import backend.repository.solr.StudentSolrRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,8 +26,8 @@ public class StudentService {
     @Autowired
     private KafkaProducer kafkaProducer;
 
-    @Autowired
-    private StudentSolrRepository studentSolrRepository;
+//    @Autowired
+//    private StudentSolrRepository studentSolrRepository;
 
 //    public List<Student> searchStudents(String name, String enrollmentNumber, String email) {
 //        return studentSolrRepository.findByNameOrEnrollmentNumberOrEmail(name, enrollmentNumber, email);
@@ -44,18 +42,19 @@ public class StudentService {
                 throw new IllegalArgumentException("Student with this enrollment number already exists.");
             }
 
-//            Student savedStudent = studentRepository.save(student);
-            ClearStudent clearStudent = new ClearStudent();
-            clearStudent.setName(student.getName());
-            clearStudent.setEmail(student.getEmail());
-            clearStudent.setDateOfBirth(student.getDateOfBirth());
-            clearStudent.setEnrollmentNumber(student.getEnrollmentNumber());
-            clearStudent.setPlatformUser(platformUser.get());
-            studentSolrRepository.save(clearStudent, Duration.ofSeconds(2));
+            student.setPlatformUser(platformUser.get());
+            Student savedStudent = studentRepository.save(student);
+//            ClearStudent clearStudent = new ClearStudent();
+//            clearStudent.setName(student.getName());
+//            clearStudent.setEmail(student.getEmail());
+//            clearStudent.setDateOfBirth(student.getDateOfBirth());
+//            clearStudent.setEnrollmentNumber(student.getEnrollmentNumber());
+//            clearStudent.setPlatformUser(platformUser.get());
+//            studentSolrRepository.save(clearStudent, Duration.ofSeconds(2));
             if (kafkaProducer != null){
                 kafkaProducer.producerForStudentRegistration(student.getEmail(), student.getEnrollmentNumber());
             }
-            return studentRepository.save(student);
+            return savedStudent;
         }
         return null;
     }

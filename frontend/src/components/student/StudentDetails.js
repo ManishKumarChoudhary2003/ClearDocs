@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const StudentDetails = () => {
-  const navigate = useNavigate();
   const { studentId } = useParams(); // Get student ID from URL
   const [documents, setDocuments] = useState([]);
   const [error, setError] = useState('');
