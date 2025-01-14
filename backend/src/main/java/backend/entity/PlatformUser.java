@@ -28,6 +28,8 @@ public class PlatformUser {
 
     private String password;
 
+    private String platformUserElasticId;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles;
 

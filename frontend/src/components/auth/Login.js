@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom'; 
 import APIClient from '../../api/APIClient';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
   const [authRequest, setAuthRequest] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // Initialize navigate for routing
+  const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;

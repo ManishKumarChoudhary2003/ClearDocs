@@ -1,35 +1,32 @@
 package backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
-@Entity
 @NoArgsConstructor
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Documents {
+@Setter
+@Getter
+@Document(indexName = "documentselastic")
+public class DocumentsElastic {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @EqualsAndHashCode.Include
-    private Long documentId;
+    private String documentId;
 
     private String documentType;
 
     private String documentName;
 
     private String fileSize;
-
-    private String documentElasticId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime issueDate;
@@ -38,10 +35,4 @@ public class Documents {
 
     @Lob
     private byte[] content;
-
-
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    @JsonIgnore
-    private Student student;
 }

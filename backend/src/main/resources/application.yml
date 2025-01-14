@@ -14,12 +14,18 @@ spring:
       ddl-auto: update
 
   data:
-    solr:
-      host: http://localhost:8983/solr
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: localhost:9200
       repositories:
         enabled: true
-      core:
-        name: ClearStudent
+
+#    solr:
+#      host: http://localhost:8983/solr
+#      repositories:
+#        enabled: true
+#      core:
+#        name: ClearStudent
 
   #  elasticsearch:
 #    rest:
@@ -48,4 +54,5 @@ spring:
 logging:
   level:
     org:
+      kafka: OFF
       springframework=DEBUG:

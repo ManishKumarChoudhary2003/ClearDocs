@@ -3,18 +3,20 @@ package backend.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Set;
 
 @AllArgsConstructor
 @Entity
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"platformUser", "documents"})
 @EqualsAndHashCode(exclude = {"platformUser", "documents"})
 public class Student {
 
@@ -25,6 +27,11 @@ public class Student {
     private String name;
 
     private String email;
+
+    private String studentElasticId;
+
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+//    private LocalDateTime dateOfBirth;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dateOfBirth;
@@ -39,4 +46,12 @@ public class Student {
     @JoinColumn(name = "platform_user_id")
     @JsonIgnore
     private PlatformUser platformUser;
+
+    public Long getDateOfBirthAsLong() {
+        return dateOfBirth == null ? null : dateOfBirth.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    public void setDateOfBirthFromLong(Long timestamp) {
+        this.dateOfBirth = timestamp == null ? null : LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+    }
 }

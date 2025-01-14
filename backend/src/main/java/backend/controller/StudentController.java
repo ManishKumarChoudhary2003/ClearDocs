@@ -32,16 +32,6 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-//    @GetMapping("/search")
-//    public ResponseEntity<List<Student>> searchStudents(
-//            @RequestParam(required = false) String name,
-//            @RequestParam(required = false) String enrollmentNumber,
-//            @RequestParam(required = false) String email) {
-//
-//        List<Student> students = studentService.searchStudents(name, enrollmentNumber, email);
-//        return ResponseEntity.ok(students);
-//    }
-
 //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add/{userId}")
     public ResponseEntity<Student> addStudent(@RequestBody Student student, @PathVariable Long userId) {
@@ -49,7 +39,7 @@ public class StudentController {
             Student createdStudent = studentService.addStudent(student, userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // 409 Conflict
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
