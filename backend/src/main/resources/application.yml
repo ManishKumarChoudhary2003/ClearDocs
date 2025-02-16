@@ -55,3 +55,4 @@ logging:
     org:
       kafka: OFF
       springframework=DEBUG:
+
