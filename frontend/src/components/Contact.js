@@ -14,10 +14,10 @@ const Contact = () => {
                 <div
                   className="position-relative"
                   style={{
-                    width: '200px', // Set the desired size for the container
-                    height: '200px', // Maintain the same height for circular shape
-                    overflow: 'hidden', // Hide any overflow
-                    borderRadius: '50%', // Create a circular shape
+                    width: '200px', 
+                    height: '200px', 
+                    overflow: 'hidden',
+                    borderRadius: '50%', 
                   }}
                 >
                   <img
