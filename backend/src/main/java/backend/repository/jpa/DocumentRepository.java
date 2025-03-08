@@ -21,4 +21,8 @@ public interface DocumentRepository extends JpaRepository<Documents, Long> {
     @Modifying
     @Query("DELETE FROM Documents d WHERE d.student.studentId = :studentId")
     void deleteByStudentId(Long studentId);
+
+    @Query("SELECT COUNT(d) FROM Documents d WHERE d.isVerified = :isVerified")
+    Long countByIsVerified(Boolean isVerified);
+
 }

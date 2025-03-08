@@ -30,6 +30,14 @@ const Navbar = () => {
     setFile(e.target.files[0]);
   };
 
+  const handleCloseResultModal = () => {
+    setShowResultModal(false);
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+  };
+  
+
   const handleVerifyDocument = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -50,6 +58,9 @@ const Navbar = () => {
       setError('');
       setShowVerifyModal(false);
       setShowResultModal(true);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000); 
     } catch (err) {
       setError('Error verifying document: ' + (err.response?.data || err.message));
       setVerificationResult('');
@@ -97,6 +108,13 @@ const Navbar = () => {
                 <li className="nav-item">
                   <Link className="nav-link" to="/auditor">
                     <FaUserShield className="me-1" /> Auditors
+                  </Link>
+                </li>
+              )}
+              {userRole === 'ROLE_ADMIN' && isAuthenticated && (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/analytics">
+                    <FaUserShield className="me-1" /> Analytics
                   </Link>
                 </li>
               )}
@@ -175,7 +193,24 @@ const Navbar = () => {
       </Modal>
 
       {/* Result Modal */}
-      <Modal show={showResultModal} onHide={() => setShowResultModal(false)}>
+      {/* Result Modal */}
+<Modal show={showResultModal} onHide={handleCloseResultModal}>
+  <Modal.Header closeButton>
+    <Modal.Title>Verification Result</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {verificationResult ? (
+      <div className="alert alert-success">{verificationResult}</div>
+    ) : (
+      <div className="alert alert-danger">Verification failed. Please try again.</div>
+    )}
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={handleCloseResultModal}>Close</Button>
+  </Modal.Footer>
+</Modal>
+
+      {/* <Modal show={showResultModal} onHide={() => setShowResultModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Verification Result</Modal.Title>
         </Modal.Header>
@@ -189,7 +224,7 @@ const Navbar = () => {
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowResultModal(false)}>Close</Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </>
   );
 };

@@ -158,6 +158,10 @@ public class DocumentService {
 //    }
 
     public String verifyDocument(String enrollmentNumber, MultipartFile file, Long userId) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("File must not be null or empty.");
+        }
+
         Optional<Student> studentOptional = studentRepository.findByEnrollmentNumber(enrollmentNumber);
         if (studentOptional.isEmpty()) {
             throw new RuntimeException("Student not found with Enrollment Number: " + enrollmentNumber);
@@ -166,30 +170,34 @@ public class DocumentService {
         Student student = studentOptional.get();
         String fileHash = generateSHA256Hash(file);
 
+        if (fileHash == null || fileHash.isEmpty()) {
+            throw new RuntimeException("Failed to generate file hash.");
+        }
+
         Optional<Documents> matchedDocument = student.getDocuments().stream()
-                .filter(doc -> doc.getHashCode().equals(fileHash))
+                .filter(doc -> fileHash.equals(doc.getHashCode()))
                 .findFirst();
-        PlatformUser platformUser;
+
+        PlatformUser platformUser = platformUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
 
         if (matchedDocument.isPresent()) {
             Documents document = matchedDocument.get();
             document.setVerified(true);
             documentRepository.save(document);
 
-            platformUser = platformUserRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-
             if (kafkaProducer != null) {
                 kafkaProducer.producerForDocumentVerification(student.getEmail(), file.getOriginalFilename());
             }
 
-            auditService.generateLogAudit(platformUser,"DOCUMENT_VERIFICATION_SUCCESS", document.getDocumentId());
+            auditService.generateLogAudit(platformUser, "DOCUMENT_VERIFICATION_SUCCESS", document.getDocumentId());
             return "Document is verified.";
         } else {
-            auditService.generateLogAudit(platformUser,"DOCUMENT_VERIFICATION_FAILED");
+            auditService.generateLogAudit(platformUser, "DOCUMENT_VERIFICATION_FAILED", null);
             return "Document is not verified.";
         }
     }
+
 
 
 

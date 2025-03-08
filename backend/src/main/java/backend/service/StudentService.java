@@ -8,14 +8,11 @@ import backend.messaging.KafkaProducer;
 import backend.repository.elastic.StudentElasticsearchRepository;
 import backend.repository.jpa.DocumentRepository;
 import backend.repository.jpa.PlatformUserRepository;
-//import backend.repository.StudentElasticsearchRepository;
 import backend.repository.jpa.StudentRepository;
-import backend.utils.DateUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;

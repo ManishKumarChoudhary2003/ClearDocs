@@ -25,6 +25,18 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("DELETE FROM Student s WHERE s.enrollmentNumber = ?1")
     void deleteByEnrollmentNumber(String enrollmentNumber);
 
+    @Query("SELECT COUNT(DISTINCT s) FROM Student s " +
+            "JOIN s.documents d " +
+            "GROUP BY s.studentId " +
+            "HAVING COUNT(CASE WHEN d.isVerified = false THEN 1 END) = 0")
+    Long countStudentsWithAllVerifiedDocs();
+
+    // Count students having at least one PENDING document (verified = false)
+    @Query("SELECT COUNT(DISTINCT s) FROM Student s " +
+            "JOIN s.documents d " +
+            "WHERE d.isVerified = false")
+    Long countStudentsWithPendingDocs();
+
     Optional<Student> findByEmailAndPlatformUser(String email, PlatformUser platformUser);
 
     @Transactional

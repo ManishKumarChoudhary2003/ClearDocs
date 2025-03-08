@@ -13,6 +13,7 @@ import UploadDocument from './components/document/UploadDocument';
 import Logout from './components/auth/Logout';
 import StudentDocuments from './components/student/StudentDocuments';
 import AuditLogs from './components/audit/AuditLogs';
+import Analytics from './components/analytics/Analytics';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/auditor" element={<AuditLogs />} />
+            <Route path='/analytics' element={<Analytics />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/add-student" element={<StudentForm />} />
             <Route path="/student/:studentId" element={<StudentDetails />} />
