@@ -12,6 +12,7 @@ import UpdateStudent from './components/student/UpdateStudent'; // Ensure the co
 import UploadDocument from './components/document/UploadDocument';
 import Logout from './components/auth/Logout';
 import StudentDocuments from './components/student/StudentDocuments';
+import AuditLogs from './components/audit/AuditLogs';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <div className="container mt-4">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/auditor" element={<AuditLogs />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/add-student" element={<StudentForm />} />
             <Route path="/student/:studentId" element={<StudentDetails />} />

@@ -7,6 +7,7 @@ import backend.messaging.KafkaProducer;
 import backend.repository.jpa.DocumentRepository;
 import backend.repository.jpa.PlatformUserRepository;
 import backend.repository.jpa.StudentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class DocumentService {
     @Autowired
     private DocumentRepository documentRepository;
@@ -33,6 +35,9 @@ public class DocumentService {
 
     @Autowired
     private KafkaProducer kafkaProducer;
+
+    @Autowired
+    private AuditService auditService;
 
     public Documents addDocument(Long studentId, MultipartFile file, String documentType) {
         Optional<Student> studentOptional = studentRepository.findById(studentId);
@@ -130,7 +135,29 @@ public class DocumentService {
         return documentRepository.save(document);
     }
 
-    public String verifyDocument(String enrollmentNumber, MultipartFile file) {
+//    public String verifyDocument(String enrollmentNumber, MultipartFile file) {
+//        Optional<Student> studentOptional = studentRepository.findByEnrollmentNumber(enrollmentNumber);
+//        if (studentOptional.isEmpty()) {
+//            throw new RuntimeException("Student not found with Enrollment Number: " + enrollmentNumber);
+//        }
+//
+//        Student student = studentOptional.get();
+//        String fileHash = generateSHA256Hash(file);
+//
+//        boolean documentExists = student.getDocuments().stream()
+//                .anyMatch(doc -> doc.getHashCode().equals(fileHash));
+//
+//        if (documentExists) {
+//            if (kafkaProducer != null){
+//                kafkaProducer.producerForDocumentVerification(student.getEmail(), file.getOriginalFilename());
+//            }
+//            return "Document is verified.";
+//        } else {
+//            return "Document is not verified.";
+//        }
+//    }
+
+    public String verifyDocument(String enrollmentNumber, MultipartFile file, Long userId) {
         Optional<Student> studentOptional = studentRepository.findByEnrollmentNumber(enrollmentNumber);
         if (studentOptional.isEmpty()) {
             throw new RuntimeException("Student not found with Enrollment Number: " + enrollmentNumber);
@@ -139,18 +166,32 @@ public class DocumentService {
         Student student = studentOptional.get();
         String fileHash = generateSHA256Hash(file);
 
-        boolean documentExists = student.getDocuments().stream()
-                .anyMatch(doc -> doc.getHashCode().equals(fileHash));
+        Optional<Documents> matchedDocument = student.getDocuments().stream()
+                .filter(doc -> doc.getHashCode().equals(fileHash))
+                .findFirst();
+        PlatformUser platformUser;
 
-        if (documentExists) {
-            if (kafkaProducer != null){
+        if (matchedDocument.isPresent()) {
+            Documents document = matchedDocument.get();
+            document.setVerified(true);
+            documentRepository.save(document);
+
+            platformUser = platformUserRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
+            if (kafkaProducer != null) {
                 kafkaProducer.producerForDocumentVerification(student.getEmail(), file.getOriginalFilename());
             }
+
+            auditService.generateLogAudit(platformUser,"DOCUMENT_VERIFICATION_SUCCESS", document.getDocumentId());
             return "Document is verified.";
         } else {
+            auditService.generateLogAudit(platformUser,"DOCUMENT_VERIFICATION_FAILED");
             return "Document is not verified.";
         }
     }
+
+
 
 
 

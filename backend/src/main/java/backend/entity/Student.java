@@ -38,7 +38,7 @@ public class Student {
 
     private String enrollmentNumber;
 
-    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<Documents> documents;
 

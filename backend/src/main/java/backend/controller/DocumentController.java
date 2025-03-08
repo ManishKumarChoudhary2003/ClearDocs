@@ -61,10 +61,11 @@ public class DocumentController {
     @PostMapping("/verify-document")
     public ResponseEntity<String> verifyDocument(
             @RequestParam("enrollmentNumber") String enrollmentNumber,
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("userId") Long userId) {
 
         try {
-            String verificationResult = documentService.verifyDocument(enrollmentNumber, file);
+            String verificationResult = documentService.verifyDocument(enrollmentNumber, file, userId);
             return ResponseEntity.ok(verificationResult);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());

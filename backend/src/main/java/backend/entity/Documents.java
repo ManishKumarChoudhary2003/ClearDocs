@@ -39,6 +39,8 @@ public class Documents {
     @Lob
     private byte[] content;
 
+    private boolean isVerified;
+
 
     @ManyToOne
     @JoinColumn(name = "student_id")

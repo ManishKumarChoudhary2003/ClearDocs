@@ -6,6 +6,7 @@ import backend.entity.StudentElastic;
 import backend.mapper.StudentMapper;
 import backend.messaging.KafkaProducer;
 import backend.repository.elastic.StudentElasticsearchRepository;
+import backend.repository.jpa.DocumentRepository;
 import backend.repository.jpa.PlatformUserRepository;
 //import backend.repository.StudentElasticsearchRepository;
 import backend.repository.jpa.StudentRepository;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class StudentService {
 
     @Autowired
@@ -27,6 +29,9 @@ public class StudentService {
 
     @Autowired
     private PlatformUserRepository platformUserRepository;
+
+    @Autowired
+    private DocumentRepository documentRepository;
 
     @Autowired
     private KafkaProducer kafkaProducer;
@@ -120,20 +125,27 @@ public class StudentService {
     }
 
 
-
-
+    @Transactional
     public boolean deleteStudent(Long studentId) {
         Optional<Student> studentOptional = studentRepository.findById(studentId);
+
         if (studentOptional.isPresent()) {
-            studentElasticsearchRepository.deleteById(studentOptional.get().getStudentElasticId());
+            Student student = studentOptional.get();
+
+            documentRepository.deleteByStudentId(studentId);
+
+            studentElasticsearchRepository.deleteById(student.getStudentElasticId());
+
+            studentRepository.deleteStudent(studentId);
+
             if (kafkaProducer != null){
-                kafkaProducer.producerForStudentDeletion(studentOptional.get().getEmail());
+                kafkaProducer.producerForStudentDeletion(student.getEmail());
             }
-            studentRepository.deleteById(studentId);
             return true;
         }
         return false;
     }
+
 
 
 //    public boolean deleteStudent(String enrollmentNumber) {
