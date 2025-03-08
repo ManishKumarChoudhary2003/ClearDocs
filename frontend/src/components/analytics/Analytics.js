@@ -7,10 +7,12 @@ import "chart.js/auto";
 const Analytics = () => {
     const [auditLogs, setAuditLogs] = useState([]);
     const [analyticsData, setAnalyticsData] = useState(null);
+    const [documentAnalytics, setDocumentAnalytics] = useState({});
     const [error, setError] = useState("");
     const [selectedField, setSelectedField] = useState(null);
     const [visualizationType, setVisualizationType] = useState("PieChart");
     const [expandedChart, setExpandedChart] = useState(null);
+    const [expandedDocumentField, setExpandedDocumentField] = useState(null);
 
     useEffect(() => {
         const fetchAuditLogs = async () => {
@@ -39,6 +41,29 @@ const Analytics = () => {
             }
         };
 
+        const fetchDocumentAnalytics = async () => {
+            const token = localStorage.getItem("token");
+            try {
+                const totalStorage = await axios.get("http://localhost:8080/analytics/total-storage", { headers: { Authorization: `Bearer ${token}` } });
+                const averageFileSize = await axios.get("http://localhost:8080/analytics/average-file-size", { headers: { Authorization: `Bearer ${token}` } });
+                const commonDocumentType = await axios.get("http://localhost:8080/analytics/common-document-type", { headers: { Authorization: `Bearer ${token}` } });
+                const topUploaders = await axios.get("http://localhost:8080/analytics/top-uploaders", { headers: { Authorization: `Bearer ${token}` } });
+                const largestFile = await axios.get("http://localhost:8080/analytics/largest-file", { headers: { Authorization: `Bearer ${token}` } });
+
+                setDocumentAnalytics({
+                    totalStorage: totalStorage.data.TotalStorageUsed,
+                    averageFileSize: averageFileSize.data.AverageFileSize,
+                    commonDocumentType: commonDocumentType.data,
+                    topUploaders: topUploaders.data.TopUploaders,
+                    largestFile: largestFile.data.LargestFileSize,
+                });
+            } catch (err) {
+                console.error("Error fetching document analytics:", err);
+                setError("Failed to fetch document analytics.");
+            }
+        };
+        fetchDocumentAnalytics();
+
         fetchAuditLogs();
         fetchAnalyticsData();
     }, []);
@@ -54,6 +79,10 @@ const Analytics = () => {
         setExpandedChart(expandedChart === chartType ? null : chartType);
     };
 
+    const toggleExpandedDocumentField = (field) => {
+        setExpandedDocumentField(expandedDocumentField === field ? null : field);
+    };
+
     if (error) {
         return <div className="alert alert-danger">{error}</div>;
     }
@@ -64,7 +93,7 @@ const Analytics = () => {
 
             {/* Audit Analytics Section */}
             <div className="card shadow-lg p-3 mt-4">
-                <h5>Select a Field to Visualize (Audit Logs)</h5>
+                <h4 className="text-muted">Auditing Analytics</h4>
                 <div className="d-flex flex-wrap justify-content-center gap-2 mt-3">
                     {fieldOptions.map((field) => (
                         <button
@@ -102,7 +131,7 @@ const Analytics = () => {
             {/* Verification Analytics Section */}
             {analyticsData && (
                 <div className="card shadow-lg p-3 mt-5 text-center">
-                    <h4 className="text-info">Verification Analytics</h4>
+                    <h4 className="text-muted">Verification Analytics</h4>
                     <div className="d-flex flex-wrap justify-content-center gap-2 mt-2">
                         {visualizationOptions.map((option) => (
                             <button
@@ -151,6 +180,45 @@ const Analytics = () => {
                     )}
                 </div>
             )}
+            <div className="container mt-5 text-center">
+                {/* Document Analytics Section */}
+                <div className="card shadow-lg p-4 mt-5 text-center">
+                    <h4 className="text-muted">Document Analytics</h4>
+                    <div className="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                        {Object.keys(documentAnalytics).map((field) => (
+                            <button
+                                key={field}
+                                className={`btn ${expandedDocumentField === field ? "btn-success" : "btn-outline-success"}`}
+                                onClick={() => toggleExpandedDocumentField(field)}
+                            >
+                                {field.replace(/([A-Z])/g, " $1").toUpperCase()}
+                            </button>
+                        ))}
+                    </div>
+                    {expandedDocumentField && (
+                        <div className="mt-4 p-4 border border-success rounded d-flex flex-column align-items-center text-center">
+                            <h5 className="fw-bold">{expandedDocumentField.replace(/([A-Z])/g, " $1").toUpperCase()}</h5>
+                            {expandedDocumentField === "commonDocumentType" ? (
+                                <p className="fw-semibold">
+                                    <strong>Type:</strong> {documentAnalytics.commonDocumentType.DocumentType} <br />
+                                    <strong>Percentage:</strong> {documentAnalytics.commonDocumentType.Percentage}
+                                </p>
+                            ) : expandedDocumentField === "topUploaders" ? (
+                                <ul className="list-group w-50">
+                                    {documentAnalytics.topUploaders.map(([name, count], index) => (
+                                        <li key={index} className="list-group-item text-center">
+                                            {name} - {count} 
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <pre className="text-center">{JSON.stringify(documentAnalytics[expandedDocumentField], null, 2)}</pre>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+            </div>
         </div>
     );
 };

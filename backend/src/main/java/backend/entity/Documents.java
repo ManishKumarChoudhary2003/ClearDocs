@@ -27,7 +27,7 @@ public class Documents {
 
     private String documentName;
 
-    private String fileSize;
+    private Long fileSize;
 
     private String documentElasticId;
 

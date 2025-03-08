@@ -55,7 +55,8 @@ public class DocumentService {
         String hash = generateSHA256Hash(file);
         document.setHashCode(hash);
         long fileSize = file.getSize();
-        document.setFileSize(convertToReadableSize(fileSize));
+//        document.setFileSize(convertToReadableSize(fileSize));
+        document.setFileSize(file.getSize());
 
         try {
             document.setContent(file.getBytes());
@@ -120,7 +121,8 @@ public class DocumentService {
             document.setDocumentName(file.getOriginalFilename());
             document.setHashCode(generateSHA256Hash(file));
             long fileSize = file.getSize();
-            document.setFileSize(convertToReadableSize(fileSize));
+            document.setFileSize(file.getSize());
+//            document.setFileSize(convertToReadableSize(fileSize));
             try {
                 document.setContent(file.getBytes());
             } catch (IOException e) {

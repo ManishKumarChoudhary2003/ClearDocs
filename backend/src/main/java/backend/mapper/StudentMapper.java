@@ -4,7 +4,6 @@ import backend.entity.PlatformUser;
 import backend.entity.PlatformUserElastic;
 import backend.entity.Student;
 import backend.entity.StudentElastic;
-import backend.utils.DateUtils;
 
 import java.time.ZoneId;
 

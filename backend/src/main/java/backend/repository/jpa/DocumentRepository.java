@@ -25,4 +25,23 @@ public interface DocumentRepository extends JpaRepository<Documents, Long> {
     @Query("SELECT COUNT(d) FROM Documents d WHERE d.isVerified = :isVerified")
     Long countByIsVerified(Boolean isVerified);
 
+    @Query("SELECT SUM(d.fileSize) FROM Documents d")
+    Double getTotalStorageUsed();
+
+    @Query("SELECT d.fileSize FROM Documents d")
+    List<String> getAllFileSizes();
+
+
+    @Query("SELECT d.documentType, COUNT(d) * 100.0 / (SELECT COUNT(*) FROM Documents) " +
+            "FROM Documents d GROUP BY d.documentType ORDER BY COUNT(d) DESC")
+    List<Object[]> getMostCommonDocumentType();
+
+    @Query("SELECT d.student.name, COUNT(d) FROM Documents d " +
+            "GROUP BY d.student.name " +
+            "ORDER BY COUNT(d) DESC LIMIT 5")
+    List<Object[]> getTopUploaders();
+
+
+    @Query("SELECT MAX(d.fileSize) FROM Documents d")
+    Double getLargestFileSize();
 }
