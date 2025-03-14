@@ -2,6 +2,7 @@ package backend.controller;
 
 import backend.entity.AuditLog;
 import backend.service.AuditService;
+import jakarta.servlet.ServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,9 @@ public class AuditorController {
 
     @GetMapping("/get-all")
     public ResponseEntity<List<AuditLog>> getAllAuditors() {
-        return ResponseEntity.ok(auditorService.getAllAuditors());
+        return ResponseEntity.ok(auditorService.getAllAuditLogs());
     }
+
+
 
 }

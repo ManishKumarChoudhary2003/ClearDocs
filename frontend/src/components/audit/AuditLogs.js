@@ -52,6 +52,19 @@ const AuditLogs = () => {
         setFilteredLogs(filtered);
     };
 
+    const getCardStyle = () => {
+        return { backgroundColor: "white", transition: "background-color 0.3s ease" };  
+    };
+    
+    const getHoverCardStyle = (action) => {
+        if (action === "DOCUMENT_VERIFICATION_FAILED") return { backgroundColor: "rgba(248, 215, 218, 0.8)" }; // Light Red on Hover
+        if (action === "DOCUMENT_VERIFICATION_SUCCESS") return { backgroundColor: "rgba(212, 237, 218, 0.8)" }; // Light Green on Hover
+        return { backgroundColor: "rgba(248, 249, 250, 1)" };  
+    };
+    
+    
+    
+
     return (
         <div className="container mt-5">
             <h2 className="text-center mb-4 text-primary fw-bold">Audit Logs</h2>
@@ -72,21 +85,30 @@ const AuditLogs = () => {
             ) : (
                 <div className="row justify-content-center">
                     {filteredLogs.map((log, index) => (
-                        <div key={log.id || index} className="col-lg-4 col-md-6 mb-4">
-                            <div className="card shadow-lg border-0 rounded-4 bg-light">
-                                <div className="card-body p-4">
-                                    <h5 className="card-title text-center text-uppercase fw-bold text-dark">{log.action}</h5>
-                                    <hr className="my-3" />
-                                    <p className="card-text"><strong>Auditor:</strong> {log.name}</p>
-                                    <p className="card-text"><strong>Email:</strong> {log.email}</p>
-                                    <p className="card-text"><strong>Phone:</strong> {log.mobileNumber}</p>
-                                    <p className="card-text"><strong>System OS:</strong> {log.systemOS}</p>
-                                    <p className="card-text"><strong>System User:</strong> {log.systemUserName}</p>
-                                    <p className="card-text"><strong>IP Address:</strong> {log.systemUserIp}</p>
-                                    <p className="card-text text-muted text-end"><small>{new Date(log.timestamp).toLocaleString()}</small></p>
-                                </div>
+                        <div 
+                        key={log.id || index} 
+                        className="col-lg-4 col-md-6 mb-4"
+                    >
+                        <div 
+                            className="card shadow-lg border-0 rounded-4" 
+                            style={getCardStyle()} 
+                            onMouseEnter={(e) => Object.assign(e.currentTarget.style, getHoverCardStyle(log.action))}
+                            onMouseLeave={(e) => Object.assign(e.currentTarget.style, getCardStyle())}
+                        >
+                            <div className="card-body p-4">
+                                <h5 className="card-title text-center text-uppercase fw-bold text-dark">{log.action}</h5>
+                                <hr className="my-3" />
+                                <p className="card-text"><strong>Auditor:</strong> {log.name}</p>
+                                <p className="card-text"><strong>Email:</strong> {log.email}</p>
+                                <p className="card-text"><strong>Phone:</strong> {log.mobileNumber}</p>
+                                <p className="card-text"><strong>System OS:</strong> {log.systemOS}</p>
+                                <p className="card-text"><strong>System User:</strong> {log.systemUserName}</p>
+                                <p className="card-text"><strong>IP Address:</strong> {log.systemUserIp}</p>
+                                <p className="card-text text-muted text-end"><small>{new Date(log.timestamp).toLocaleString()}</small></p>
                             </div>
                         </div>
+                    </div>
+                    
                     ))}
                 </div>
             )}
@@ -95,6 +117,7 @@ const AuditLogs = () => {
 };
 
 export default AuditLogs;
+
 
 
 

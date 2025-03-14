@@ -1,5 +1,7 @@
 package backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,7 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.elasticsearch.annotations.Document;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,6 +20,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(indexName = "audit_logs")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AuditLog {
 
     @Id
@@ -40,5 +46,8 @@ public class AuditLog {
 
     private String systemUserIp;
 
-    private LocalDateTime timestamp;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime timestamp;
+
+    private Instant timestamp;
 }
