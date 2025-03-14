@@ -12,14 +12,18 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.Criteria;
+import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.management.Query;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.Instant;
@@ -39,7 +43,6 @@ public class AuditService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final String ELASTICSEARCH_URL = "http://localhost:9200/audit_logs/_search";
-
 
 
     public void generateLogAudit(PlatformUser platformUser,String action, Long documentId) {
@@ -93,4 +96,40 @@ public class AuditService {
                 .map(hit -> objectMapper.convertValue(hit.get("_source"), AuditLog.class))
                 .collect(Collectors.toList());
     }
+
+    public List<AuditLog> fullTextSearch(String query) {
+        try {
+            String jsonQuery = "{ \"query\": { \"bool\": { \"should\": ["
+                    + "{ \"wildcard\": { \"name\": \"*" + query + "*\" } },"
+                    + "{ \"wildcard\": { \"email\": \"*" + query + "*\" } },"
+                    + "{ \"wildcard\": { \"systemOS\": \"*" + query + "*\" } },"
+                    + "{ \"wildcard\": { \"action\": \"*" + query + "*\" } }"
+                    + "] } } }";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+
+            HttpEntity<String> requestEntity = new HttpEntity<>(jsonQuery, headers);
+            ResponseEntity<Map> response = restTemplate.exchange(ELASTICSEARCH_URL, HttpMethod.POST, requestEntity, Map.class);
+
+            Map<String, Object> responseBody = response.getBody();
+            if (responseBody == null || !responseBody.containsKey("hits")) {
+                return new ArrayList<>();
+            }
+
+            List<Map<String, Object>> hits = (List<Map<String, Object>>) ((Map<String, Object>) responseBody.get("hits")).get("hits");
+
+            return hits.stream()
+                    .map(hit -> objectMapper.convertValue(hit.get("_source"), AuditLog.class))
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+
+
 }
