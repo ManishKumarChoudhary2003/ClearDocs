@@ -15,7 +15,7 @@ const StudentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userId = localStorage.getItem("userId");
+    const adminId = localStorage.getItem("adminId");
     const token = localStorage.getItem("token");
 
     const dateOfBirthWithTime = `${dateOfBirth}T00:00:00`;
@@ -28,7 +28,7 @@ const StudentForm = () => {
     };
 
     try {
-      const response = await axios.post(`http://localhost:8080/student/add/${userId}`, studentData, {
+      const response = await axios.post(`http://localhost:8080/student/add/${adminId}`, studentData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',

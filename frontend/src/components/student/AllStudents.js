@@ -9,16 +9,16 @@ const AllStudents = () => {
 
   useEffect(() => {
     const fetchStudents = async () => {
-      const userId = localStorage.getItem('userId');
+      const adminId = localStorage.getItem('adminId');
       const token = localStorage.getItem('token');
 
-      if (!userId) {
+      if (!adminId) {
         setError('User ID is not found. Please log in again.');
         return;
       }
 
       try {
-        const response = await axios.get(`http://localhost:8080/student/user/${userId}`, {
+        const response = await axios.get(`http://localhost:8080/student/user/${adminId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

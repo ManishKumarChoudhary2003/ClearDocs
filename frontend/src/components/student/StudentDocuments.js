@@ -14,7 +14,7 @@ const StudentDocuments = () => {
         try {
             const token = localStorage.getItem('token');
             const email = localStorage.getItem('email');
-            const userId = localStorage.getItem('userId');
+            const userId = localStorage.getItem('adminId');
 
             if (!email || !userId || !token) {
                 setError('Missing user information or token.');

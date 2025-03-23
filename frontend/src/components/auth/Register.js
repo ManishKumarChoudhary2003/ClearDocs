@@ -55,12 +55,15 @@ const Register = () => {
       console.log('API response:', response); // Debugging response
 
       // Store user ID in localStorage
-      localStorage.setItem('userRole', user.roles[0]);
-      if (user.roles[0] === 'ROLE_STUDENT') {
-        localStorage.setItem('studentId', response.data.id); // Store student ID
-      } else {
-        localStorage.setItem('userId', response.data.id);
-      }
+      // localStorage.setItem('userRole', user.roles[0]);
+      // if (user.roles[0] === 'ROLE_STUDENT') {
+      //   localStorage.setItem('studentId', response.data.id);  
+      // }else if(user.roles[0] === 'ROLE_USER'){
+      //   localStorage.setItem('userId', response.data.id);
+      // }
+      // else {
+      //   localStorage.setItem('adminId', response.data.id);
+      // } 
 
       // Set success message
       setMessage('Registration successful! Redirecting to login...');
@@ -158,7 +161,19 @@ const Register = () => {
                 <option value="ROLE_STUDENT">Student</option>
               </select>
             </div>
-            <button type="submit" className="btn btn-primary w-100">Register</button>
+            <button type="submit" className="btn btn-primary w-100"
+            style={{
+              transition: 'transform 0.3s ease, opacity 0.3s ease',
+            }}
+            onMouseDown={(e) => {
+              e.target.style.transform = 'scale(1.1)';  
+              e.target.style.opacity = '0.8';  
+            }}
+            onMouseUp={(e) => {
+              e.target.style.transform = 'scale(1)';  
+              e.target.style.opacity = '1';  
+            }}
+            >Register</button>
           </form>
         </div>
       </div>

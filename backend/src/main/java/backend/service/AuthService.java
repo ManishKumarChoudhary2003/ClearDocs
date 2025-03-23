@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class AuthService {
 
@@ -64,9 +66,12 @@ public class AuthService {
         return savedUser;
     }
 
-    public String generateToken(String email) {
-        PlatformUser platformUser = repository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-        return jwtService.generateToken(email, platformUser.getRoles());
+    public String generateToken(String email, Set<String> roles) {
+//        PlatformUser platformUser = repository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        return jwtService.generateToken(email, roles);
     }
 
+    public PlatformUser findByEmail(String email) {
+       return repository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }

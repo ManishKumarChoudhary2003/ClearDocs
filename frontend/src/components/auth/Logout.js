@@ -8,27 +8,31 @@ const Logout = () => {
 
     // Function to handle logout (removing only token)
     const handleLogout = () => {
-        // Remove token from localStorage
-        localStorage.removeItem('token');
-
-        // Redirect to the login page after clearing the token
-        navigate('/');
-        window.location.reload();
-    };
-
-    // Function to handle account deletion (remove all data)
-    const handleDeleteAccount = () => {
-        // Remove all user details from localStorage
-        // localStorage.removeItem('userId');
-        // localStorage.removeItem('studentId');
-        // localStorage.removeItem('userRole');
+        // Get role from localStorage before clearing it
+        // const role = localStorage.getItem('userRole');
+    
+        // Remove common items from localStorage
         localStorage.removeItem('token');
         localStorage.removeItem('email');
-
-        // Redirect to the login page after clearing all data
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('studentId');
+        localStorage.removeItem('userId');
+      
+    
+        // Redirect to login
         navigate('/');
         window.location.reload();
     };
+    
+
+    // Function to handle account deletion (remove all data)
+    // const handleDeleteAccount = () => {
+    //     localStorage.removeItem('token');
+    //     localStorage.removeItem('email');
+ 
+    //     navigate('/');
+    //     window.location.reload();
+    // };
 
     // Function to close the confirmation popup without logging out
     const closePopup = () => {
@@ -54,10 +58,10 @@ const Logout = () => {
                                 <button className="btn btn-secondary" onClick={closePopup}>
                                     Cancel
                                 </button>
-                                <button className="btn btn-danger" onClick={handleDeleteAccount}>
+                                {/* <button className="btn btn-danger" onClick={handleDeleteAccount}>
                                     Delete Account
-                                </button>
-                                <button className="btn btn-warning" onClick={handleLogout}>
+                                </button> */}
+                                <button className="btn btn-danger" onClick={handleLogout}>
                                     Log Out
                                 </button>
                             </div>

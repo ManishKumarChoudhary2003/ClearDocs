@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.dto.AuthRequestDTO;
+import backend.dto.AuthResponseDTO;
 import backend.entity.PlatformUser;
 import backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,23 +31,51 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> getToken(@RequestBody AuthRequestDTO authRequestDTO) {
+    public ResponseEntity<AuthResponseDTO> getToken(@RequestBody AuthRequestDTO authRequestDTO) {
         try {
             Authentication authenticate = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword())
             );
 
-            System.out.println(authenticate.getAuthorities() + " -------------------------- " + authenticate.isAuthenticated());
-
             if (authenticate.isAuthenticated()) {
-                return ResponseEntity.status(HttpStatus.OK).body(service.generateToken(authRequestDTO.getEmail()));
+                PlatformUser platformUser = service.findByEmail(authRequestDTO.getEmail());
+
+                String token = service.generateToken(platformUser.getEmail(), platformUser.getRoles());
+
+                return ResponseEntity.ok(new AuthResponseDTO(
+                        platformUser.getId(),
+                        token,
+                        platformUser.getEmail(),
+                        platformUser.getRoles().stream().findFirst().orElse(null)
+                ));
             } else {
-                throw new RuntimeException("invalid access");
+                throw new RuntimeException("Invalid access");
             }
         } catch (Exception e) {
             System.out.println("Authentication failed: " + e.getMessage());
             throw new RuntimeException("Authentication failed", e);
         }
     }
+
+
+//    @PostMapping("/login")
+//    public ResponseEntity<String> getToken(@RequestBody AuthRequestDTO authRequestDTO) {
+//        try {
+//            Authentication authenticate = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword())
+//            );
+//
+//            System.out.println(authenticate.getAuthorities() + " -------------------------- " + authenticate.isAuthenticated());
+//
+//            if (authenticate.isAuthenticated()) {
+//                return ResponseEntity.status(HttpStatus.OK).body(service.generateToken(authRequestDTO.getEmail()));
+//            } else {
+//                throw new RuntimeException("invalid access");
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Authentication failed: " + e.getMessage());
+//            throw new RuntimeException("Authentication failed", e);
+//        }
+//    }
 
 }

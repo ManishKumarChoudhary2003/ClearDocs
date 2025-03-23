@@ -43,7 +43,9 @@ const Navbar = () => {
     const formData = new FormData();
     formData.append('enrollmentNumber', enrollmentNumber);
     formData.append('file', file);
-    formData.append('userId', localStorage.getItem('userId'));
+    const userId = localStorage.getItem('userId');
+    const adminId = localStorage.getItem('adminId');
+    formData.append('userId', userId ? userId : adminId);
 
     try {
       const token = localStorage.getItem('token');
