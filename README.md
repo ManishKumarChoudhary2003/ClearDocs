@@ -117,5 +117,5 @@ Developed by **[Manish Kumar Choudhary](https://github.com/ManishKumarChoudhary2
 
 🌟 **Star this repo if you find it useful!** 🌟
 
-🔗 **Portfolio:** [manish-kumar-choudhary.netlify.app](https://manish-kumar-choudhary.netlify.app/)
+🔗 **Portfolio:** [Manish](https://manish-kumar-choudhary.netlify.app/)
 
