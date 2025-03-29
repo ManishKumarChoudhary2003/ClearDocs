@@ -57,7 +57,7 @@ POST audit_logs/_doc/
 {
   "id": 1,
     "action" : "DOCUMENT_VERIFICATION_SUCCESS",
-    "name" : "cmanishkuma",
+    "name" : "Manish",
     "email" : "cmanishkumar193@gmail.com",
     "mobileNumber" : "8955946276",
     "documentId" : 1,
@@ -80,7 +80,7 @@ Example response:
     "_class" : "backend.entity.AuditLog",
     "id" : 3,
     "action" : "DOCUMENT_VERIFICATION_SUCCESS",
-    "name" : "cmanishkuma",
+    "name" : "Manish",
     "email" : "cmanishkumar193@gmail.com",
     "mobileNumber" : "8955946276",
     "documentId" : 1,
