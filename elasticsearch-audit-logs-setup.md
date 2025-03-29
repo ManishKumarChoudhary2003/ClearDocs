@@ -1,10 +1,9 @@
-# Elasticsearch Audit Logs Index Setup
+# Elasticsearch Audit Logs Setup
 
-This document provides a step-by-step guide to setting up an Elasticsearch index for storing audit logs. The index structure is designed to store user actions, system details, and timestamps for logging purposes.
+This document provides a reference for setting up an Elasticsearch index to store audit logs.
 
-## 1. Create the Audit Logs Index
-
-To create the `audit_logs` index with the required mappings, use the following command:
+## 1. Creating the Index
+To create an `audit_logs` index with the necessary mappings, use the following command:
 
 ### **PUT audit_logs**
 ```json
@@ -13,34 +12,34 @@ PUT audit_logs
   "mappings": {
     "properties": {
       "id": { "type": "long" },
-      "action": {
+      "action": { 
         "type": "text",
         "fields": { "keyword": { "type": "keyword" } }
       },
-      "name": {
+      "name": { 
         "type": "text",
         "fields": { "keyword": { "type": "keyword" } }
       },
-      "email": {
+      "email": { 
         "type": "text",
         "fields": { "keyword": { "type": "keyword" } }
       },
       "mobileNumber": { "type": "keyword" },  
       "documentId": { "type": "long" },
-      "verifiedBy": {
+      "verifiedBy": { 
         "type": "text",
         "fields": { "keyword": { "type": "keyword" } }
       },
-      "systemOS": {
+      "systemOS": { 
         "type": "text",
         "fields": { "keyword": { "type": "keyword" } }
       },
-      "systemUserName": {
+      "systemUserName": { 
         "type": "text",
         "fields": { "keyword": { "type": "keyword" } }
       },
       "systemUserIp": { "type": "ip" },
-      "timestamp": {
+      "timestamp": { 
         "type": "date",
         "format": "epoch_millis||yyyy-MM-dd'T'HH:mm:ss.SSS"
       }
@@ -49,23 +48,8 @@ PUT audit_logs
 }
 ```
 
-## 2. Query the Audit Logs
-
-To retrieve all documents from the `audit_logs` index, use the following search query:
-
-### **GET audit_logs/_search**
-```json
-GET audit_logs/_search
-{
-  "query": {
-    "match_all": {}
-  }
-}
-```
-
-## 3. Indexing Sample Data
-
-To insert a sample audit log entry, use the following command:
+## 2. Adding Documents
+To insert an audit log entry, use the following command:
 
 ### **POST audit_logs/_doc/**
 ```json
@@ -85,8 +69,43 @@ POST audit_logs/_doc/
 }
 ```
 
-## 4. Deleting the Index
+Example response:
+```json
+{
+  "_index" : "audit_logs",
+  "_type" : "_doc",
+  "_id" : "3",
+  "_score" : 1.0,
+  "_source" : {
+    "_class" : "backend.entity.AuditLog",
+    "id" : 3,
+    "action" : "DOCUMENT_VERIFICATION_SUCCESS",
+    "name" : "cmanishkuma",
+    "email" : "cmanishkumar193@gmail.com",
+    "mobileNumber" : "8955946276",
+    "documentId" : 1,
+    "systemOS" : "Linux",
+    "systemUserName" : "manish",
+    "systemUserIp" : "127.0.1.1",
+    "timestamp" : 1743223817089
+  }
+}
+```
 
+## 3. Searching for Documents
+To retrieve all audit log entries, use the following command:
+
+### **GET audit_logs/_search**
+```json
+GET audit_logs/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+```
+
+## 4. Deleting the Index
 To delete the `audit_logs` index, use the following command:
 
 ### **DELETE audit_logs**
