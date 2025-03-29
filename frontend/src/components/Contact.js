@@ -98,7 +98,7 @@ const Contact = () => {
 
           {/* Footer */}
           <div className="text-center mt-5">
-            <p className="text-muted">&copy; 2024 Your Name. All rights reserved.</p>
+            <p className="text-muted">&copy; 2025 Manish. All rights reserved.</p>
           </div>
         </div>
       </div>
