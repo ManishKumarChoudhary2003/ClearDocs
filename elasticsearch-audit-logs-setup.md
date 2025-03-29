@@ -56,16 +56,16 @@ To insert an audit log entry, use the following command:
 POST audit_logs/_doc/
 {
   "id": 1,
-  "action": "User Login",
-  "name": "John Doe",
-  "email": "john.doe@example.com",
-  "mobileNumber": "1234567890",
-  "documentId": 101,
-  "verifiedBy": "Admin",
-  "systemOS": "Windows 10",
-  "systemUserName": "johndoe",
-  "systemUserIp": "192.168.1.1",
-  "timestamp": "2024-07-26T14:30:00.000"
+    "action" : "DOCUMENT_VERIFICATION_SUCCESS",
+    "name" : "cmanishkuma",
+    "email" : "cmanishkumar193@gmail.com",
+    "mobileNumber" : "8955946276",
+    "documentId" : 1,
+    "verifiedBy": "Admin",
+    "systemOS" : "Linux",
+    "systemUserName" : "manish",
+    "systemUserIp" : "127.0.1.1",
+    "timestamp" : 1743223817089
 }
 ```
 
