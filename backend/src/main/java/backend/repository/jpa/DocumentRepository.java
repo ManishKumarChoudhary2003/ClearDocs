@@ -41,7 +41,4 @@ public interface DocumentRepository extends JpaRepository<Documents, Long> {
             "ORDER BY COUNT(d) DESC LIMIT 5")
     List<Object[]> getTopUploaders();
 
-
-    @Query("SELECT MAX(d.fileSize) FROM Documents d")
-    Double getLargestFileSize();
 }

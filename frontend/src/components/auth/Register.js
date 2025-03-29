@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation
+import { useNavigate } from 'react-router-dom';  
 import APIClient from '../../api/APIClient';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -9,28 +9,26 @@ const Register = () => {
     email: '',
     mobileNumber: '',
     password: '',
-    roles: [], // Store roles as an array
+    roles: [], 
   });
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // For navigation
+  const navigate = useNavigate();  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'roles') {
-      setUser({ ...user, roles: [value] }); // Wrap the selected role in an array
+      setUser({ ...user, roles: [value] });  
     } else {
       setUser({ ...user, [name]: value });
     }
   };
 
   const validateMobileNumber = (mobileNumber) => {
-    // Check if the mobile number is exactly 10 digits
     const mobileNumberRegex = /^\d{10}$/;
     return mobileNumberRegex.test(mobileNumber);
   };
 
   const validatePassword = (password) => {
-    // Ensure password is at least 8 characters long and contains at least one special character
     const passwordRegex = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     return passwordRegex.test(password);
   };
@@ -38,13 +36,11 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Mobile number validation
     if (!validateMobileNumber(user.mobileNumber)) {
       setMessage('Mobile number must be exactly 10 digits.');
       return;
     }
 
-    // Password validation
     if (!validatePassword(user.password)) {
       setMessage('Password must be at least 8 characters long and contain at least one special character.');
       return;
@@ -52,23 +48,11 @@ const Register = () => {
 
     try {
       const response = await APIClient.register(user);
-      console.log('API response:', response); // Debugging response
+      console.log('API response:', response);  
 
-      // Store user ID in localStorage
-      // localStorage.setItem('userRole', user.roles[0]);
-      // if (user.roles[0] === 'ROLE_STUDENT') {
-      //   localStorage.setItem('studentId', response.data.id);  
-      // }else if(user.roles[0] === 'ROLE_USER'){
-      //   localStorage.setItem('userId', response.data.id);
-      // }
-      // else {
-      //   localStorage.setItem('adminId', response.data.id);
-      // } 
-
-      // Set success message
+    
       setMessage('Registration successful! Redirecting to login...');
 
-      // Clear form fields immediately after setting the message
       setUser({
         username: '',
         email: '',
@@ -77,12 +61,11 @@ const Register = () => {
         roles: [],
       });
 
-      // Redirect to login after 2 seconds
       setTimeout(() => {
-        navigate('/login'); // Navigate to login page
+        navigate('/login'); 
       }, 2000);
     } catch (error) {
-      console.log('Error response:', error.response); // Debugging error response
+      console.log('Error response:', error.response);  
       setMessage('Error registering user: ' + (error.response?.data?.message || error.message));
     }
   };
@@ -96,7 +79,7 @@ const Register = () => {
             <div className={`alert ${message.includes('Error') ? 'alert-danger' : 'alert-success'} text-center`}>
               {message}
             </div>
-          )} {/* Success or error message */}
+          )}  
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Username</label>
@@ -150,7 +133,7 @@ const Register = () => {
               <label className="form-label">Role</label>
               <select
                 name="roles"
-                value={user.roles[0] || ''} // Ensure only the first role is displayed
+                value={user.roles[0] || ''} 
                 onChange={handleChange}
                 className="form-select"
                 required

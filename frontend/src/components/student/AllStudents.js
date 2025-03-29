@@ -23,7 +23,6 @@ const AllStudents = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        // Sort students by studentId or another key to show the newest first
         const sortedStudents = (response.data || []).sort((a, b) => b.studentId - a.studentId);
         setStudents(sortedStudents);
       } catch (err) {

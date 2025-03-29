@@ -6,9 +6,9 @@ import Contact from './components/Contact';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import StudentForm from './components/student/StudentForm';
-import AllStudents from './components/student/AllStudents'; // Ensure the correct import path
-import StudentDetails from './components/student/StudentDetails'; // Ensure the correct import path
-import UpdateStudent from './components/student/UpdateStudent'; // Ensure the correct import path
+import AllStudents from './components/student/AllStudents';
+import StudentDetails from './components/student/StudentDetails';
+import UpdateStudent from './components/student/UpdateStudent';
 import UploadDocument from './components/document/UploadDocument';
 import Logout from './components/auth/Logout';
 import StudentDocuments from './components/student/StudentDocuments';

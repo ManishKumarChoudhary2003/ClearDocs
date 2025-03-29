@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "./Card";
 import { Bar, Pie } from "react-chartjs-2";
 import "chart.js/auto";
-import axios from "axios"; // Import axios for API calls
+import axios from "axios"; 
 
 const StudentChart = () => {
     const [analyticsData, setAnalyticsData] = useState(null);
@@ -10,7 +10,7 @@ const StudentChart = () => {
     const [error, setError] = useState(null);
     useEffect(() => {
         const fetchAnalytics = async () => {
-            const token = localStorage.getItem("token"); // Retrieve token from local storage
+            const token = localStorage.getItem("token"); 
             if (!token) {
                 setError("Authorization token is missing");
                 setLoading(false);
@@ -20,7 +20,7 @@ const StudentChart = () => {
             try {
                 const response = await axios.get("http://localhost:8080/analytics/verification", {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Include Bearer token
+                        Authorization: `Bearer ${token}`,  
                     },
                 });
                 setAnalyticsData(response.data);

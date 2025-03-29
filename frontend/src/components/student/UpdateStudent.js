@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const UpdateStudent = () => {
-  const { studentId } = useParams(); // Using useParams to get studentId
+  const { studentId } = useParams(); 
   const [student, setStudent] = useState({
     name: '',
     email: '',
@@ -22,8 +22,7 @@ const UpdateStudent = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        // Format date of birth for input
-        const formattedDate = response.data.dateOfBirth.split('T')[0]; // Use the date part only
+        const formattedDate = response.data.dateOfBirth.split('T')[0];  
         setStudent({ ...response.data, dateOfBirth: formattedDate });
       } catch (err) {
         console.error('Error fetching student data:', err.response ? err.response.data : err.message);
@@ -36,12 +35,11 @@ const UpdateStudent = () => {
 
   const handleUpdate = async () => {
     const token = localStorage.getItem('token');
-    // Append time to the date of birth
     const dateOfBirthWithTime = `${student.dateOfBirth}T00:00:00`;
 
     const updatedStudent = {
       ...student,
-      dateOfBirth: dateOfBirthWithTime, // Pass the date with time
+      dateOfBirth: dateOfBirthWithTime, 
     };
 
     try {
@@ -51,7 +49,7 @@ const UpdateStudent = () => {
         },
       });
       alert('Student updated successfully!');
-      navigate('/all-students'); // Redirect to the students list after successful update
+      navigate('/all-students');  
     } catch (err) {
       console.error('Error updating student:', err.response ? err.response.data : err.message);
       setError(err.response?.data?.message || 'Failed to update student.');

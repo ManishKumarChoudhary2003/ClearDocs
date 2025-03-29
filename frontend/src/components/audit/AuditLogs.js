@@ -7,7 +7,6 @@ const AuditLogs = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
-    // Function to fetch logs
     const fetchAuditLogs = async (query = "") => {
         const token = localStorage.getItem("token");
         try {
@@ -16,23 +15,21 @@ const AuditLogs = () => {
                 params: query.trim() ? { query } : {},
             });
             setAuditLogs(response.data || []);
-            setError(""); // Clear errors on success
+            setError("");  
         } catch (err) {
             console.error("Error fetching audit logs:", err.response?.data || err.message);
             setError(err.response?.data?.message || "Failed to fetch audit logs.");
         }
     };
 
-    // Debounced search function
     const debounceSearch = useCallback(() => {
         const delay = setTimeout(() => {
             fetchAuditLogs(searchQuery);
-        }, 1000); // 1-second debounce
+        }, 1000);  
 
         return () => clearTimeout(delay);
     }, [searchQuery]);
 
-    // Apply debounced search when searchQuery changes
     useEffect(() => {
         debounceSearch();
     }, [searchQuery, debounceSearch]);
@@ -42,7 +39,6 @@ const AuditLogs = () => {
             <h2 className="text-center mb-4 text-primary fw-bold">Audit Logs</h2>
             {error && <div className="alert alert-danger text-center">{error}</div>}
 
-            {/* Search Input Field */}
             <div className="row justify-content-center mb-4">
                 <div className="col-md-6">
                     <input
@@ -55,21 +51,19 @@ const AuditLogs = () => {
                 </div>
             </div>
 
-            {/* Display Logs */}
             {auditLogs.length === 0 ? (
                 <div className="alert alert-info text-center">No audit logs found.</div>
             ) : (
                 <div className="row">
                     {auditLogs.map((log, index) => {
-                        // Determine background color on hover
                         const backgroundColor =
                             hoveredIndex === index
                                 ? log.action === "DOCUMENT_VERIFICATION_SUCCESS"
-                                    ? "#d4edda" // Light green
+                                    ? "#d4edda"  
                                     : log.action === "DOCUMENT_VERIFICATION_FAILED"
-                                    ? "#f8d7da" // Light red
-                                    : "#ffffff" // Default white
-                                : "#ffffff"; // Normal state
+                                    ? "#f8d7da"  
+                                    : "#ffffff"  
+                                : "#ffffff";  
 
                         return (
                             <div key={log.id || index} className="col-lg-4 col-md-6 mb-4">

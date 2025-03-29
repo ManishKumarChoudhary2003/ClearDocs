@@ -23,10 +23,10 @@ public class DocumentAnalyticsService {
         }
 
         double totalBytes = fileSizes.stream()
-                .mapToLong(AnalyticsUtils::convertToBytes) // Convert each size to bytes
+                .mapToLong(AnalyticsUtils::convertToBytes)
                 .sum();
 
-        String totalSize = AnalyticsUtils.convertToHumanReadable(totalBytes); // Convert to human-readable format
+        String totalSize = AnalyticsUtils.convertToHumanReadable(totalBytes);
 
         return Collections.singletonMap("TotalStorageUsed", totalSize);
     }
@@ -42,7 +42,7 @@ public class DocumentAnalyticsService {
         int count = 0;
 
         for (String size : fileSizes) {
-            long bytes = AnalyticsUtils.convertToBytes(size); // Now it's just parsing the string as long
+            long bytes = AnalyticsUtils.convertToBytes(size);
             if (bytes > 0) {
                 totalBytes += bytes;
                 count++;
@@ -54,7 +54,7 @@ public class DocumentAnalyticsService {
         }
 
         double avgBytes = totalBytes / count;
-        String avgSize = AnalyticsUtils.convertToHumanReadable(avgBytes); // Convert to human-readable format
+        String avgSize = AnalyticsUtils.convertToHumanReadable(avgBytes);
 
         return Collections.singletonMap("AverageFileSize", avgSize);
     }
@@ -86,11 +86,11 @@ public class DocumentAnalyticsService {
         }
 
         double maxBytes = fileSizes.stream()
-                .mapToLong(AnalyticsUtils::convertToBytes) // Convert each size to bytes
+                .mapToLong(AnalyticsUtils::convertToBytes)
                 .max()
                 .orElse(0);
 
-        String largestSize = AnalyticsUtils.convertToHumanReadable(maxBytes); // Convert to human-readable format
+        String largestSize = AnalyticsUtils.convertToHumanReadable(maxBytes);
 
         return Collections.singletonMap("LargestFileSize", largestSize);
     }

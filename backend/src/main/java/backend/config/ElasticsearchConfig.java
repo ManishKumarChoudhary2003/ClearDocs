@@ -30,12 +30,4 @@ public class ElasticsearchConfig extends ElasticsearchConfigurationSupport {
             return source.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
     }
-
-    // Register the converters
-//    @Override
-//    public CustomConversions customConversions() {
-//        return new CustomConversions(
-//                (CustomConversions.ConverterConfiguration) List.of(new StringToLocalDateTimeConverter(), new LocalDateTimeToStringConverter())
-//        );
-//    }
 }

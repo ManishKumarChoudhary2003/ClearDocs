@@ -49,7 +49,7 @@ const Login = () => {
       <div className="card" style={{ width: '30rem' }}>
         <div className="card-body">
           <h2 className="card-title text-center">Login</h2>
-          {message && <p className="text-center text-success mb-3">{message}</p>} {/* Show success message */}
+          {message && <p className="text-center text-success mb-3">{message}</p>}  
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Email:</label>

@@ -9,7 +9,6 @@ const Contact = () => {
         <div className="col-md-8">
           <div className="card shadow-lg p-3 mb-5 bg-white rounded">
             <div className="row no-gutters">
-              {/* Image Section */}
               <div className="col-md-4 d-flex justify-content-center">
                 <div
                   className="position-relative"
@@ -25,21 +24,17 @@ const Contact = () => {
                     className="img-fluid"
                     alt="Your Name"
                     style={{
-                      width: '100%', // Make the image take the full width of the container
-                      height: 'auto', // Maintain aspect ratio
-                      position: 'absolute', // Allow for positioning
-                      top: '50%', // Center vertically
-                      left: '50%', // Center horizontally
-                      transform: 'translate(-50%, -50%) scale(1.7)', // Zoom in effect
+                      width: '100%',  
+                      height: 'auto',  
+                      position: 'absolute',  
+                      top: '50%',  
+                      left: '50%',  
+                      transform: 'translate(-50%, -50%) scale(1.7)', 
                     }}
                   />
                 </div>
               </div>
 
-
-
-
-              {/* Contact Details Section */}
               <div className="col-md-8">
                 <div className="card-body">
                   <h3 className="card-title">Manish Kumar Choudhary</h3>
@@ -48,7 +43,6 @@ const Contact = () => {
                     I am a passionate backend developer specializing in Java and Spring Boot. I love building scalable web applications and exploring new technologies.
                   </p>
 
-                  {/* Social Media Links */}
                   <div className="d-flex justify-content-start">
                     <a
                       href="https://www.linkedin.com/in/manishkumarchoudhary/"
@@ -82,7 +76,6 @@ const Contact = () => {
                     </a>
                   </div>
 
-                  {/* Extra Info */}
                   <div className="mt-4">
                     <p>
                       <strong>Phone:</strong> 8955946276
@@ -96,7 +89,6 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Footer */}
           <div className="text-center mt-5">
             <p className="text-muted">&copy; 2025 Manish. All rights reserved.</p>
           </div>

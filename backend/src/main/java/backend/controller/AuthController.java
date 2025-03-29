@@ -57,25 +57,4 @@ public class AuthController {
         }
     }
 
-
-//    @PostMapping("/login")
-//    public ResponseEntity<String> getToken(@RequestBody AuthRequestDTO authRequestDTO) {
-//        try {
-//            Authentication authenticate = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword())
-//            );
-//
-//            System.out.println(authenticate.getAuthorities() + " -------------------------- " + authenticate.isAuthenticated());
-//
-//            if (authenticate.isAuthenticated()) {
-//                return ResponseEntity.status(HttpStatus.OK).body(service.generateToken(authRequestDTO.getEmail()));
-//            } else {
-//                throw new RuntimeException("invalid access");
-//            }
-//        } catch (Exception e) {
-//            System.out.println("Authentication failed: " + e.getMessage());
-//            throw new RuntimeException("Authentication failed", e);
-//        }
-//    }
-
 }

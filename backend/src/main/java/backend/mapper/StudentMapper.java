@@ -12,7 +12,6 @@ public class StudentMapper {
     public static StudentElastic mapToElastic(Student student, StudentElastic studentElastic) {
         studentElastic.setName(student.getName());
         studentElastic.setEmail(student.getEmail());
-//        studentElastic.setDateOfBirth(student.getDateOfBirth());
         if (student.getDateOfBirth() != null) {
             studentElastic.setDateOfBirth(student.getDateOfBirth()
                     .atZone(ZoneId.systemDefault())

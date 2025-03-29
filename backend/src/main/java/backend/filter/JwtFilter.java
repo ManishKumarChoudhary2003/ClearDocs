@@ -47,9 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
-            // Ensure token is valid
             if (jwtService.validateToken(token, userDetails)) {
-                // Prefix role with ROLE_ if necessary
                 List<GrantedAuthority> updatedAuthorities = userDetails.getAuthorities().stream()
                         .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority.getAuthority()))
                         .collect(Collectors.toList());

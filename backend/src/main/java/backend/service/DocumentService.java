@@ -54,8 +54,6 @@ public class DocumentService {
         document.setStudent(student);
         String hash = generateSHA256Hash(file);
         document.setHashCode(hash);
-        long fileSize = file.getSize();
-//        document.setFileSize(convertToReadableSize(fileSize));
         document.setFileSize(file.getSize());
 
         try {
@@ -120,9 +118,7 @@ public class DocumentService {
         if (file != null && !file.isEmpty()) {
             document.setDocumentName(file.getOriginalFilename());
             document.setHashCode(generateSHA256Hash(file));
-            long fileSize = file.getSize();
             document.setFileSize(file.getSize());
-//            document.setFileSize(convertToReadableSize(fileSize));
             try {
                 document.setContent(file.getBytes());
             } catch (IOException e) {
@@ -137,27 +133,6 @@ public class DocumentService {
         return documentRepository.save(document);
     }
 
-//    public String verifyDocument(String enrollmentNumber, MultipartFile file) {
-//        Optional<Student> studentOptional = studentRepository.findByEnrollmentNumber(enrollmentNumber);
-//        if (studentOptional.isEmpty()) {
-//            throw new RuntimeException("Student not found with Enrollment Number: " + enrollmentNumber);
-//        }
-//
-//        Student student = studentOptional.get();
-//        String fileHash = generateSHA256Hash(file);
-//
-//        boolean documentExists = student.getDocuments().stream()
-//                .anyMatch(doc -> doc.getHashCode().equals(fileHash));
-//
-//        if (documentExists) {
-//            if (kafkaProducer != null){
-//                kafkaProducer.producerForDocumentVerification(student.getEmail(), file.getOriginalFilename());
-//            }
-//            return "Document is verified.";
-//        } else {
-//            return "Document is not verified.";
-//        }
-//    }
 
     public String verifyDocument(String enrollmentNumber, MultipartFile file, Long userId) {
         if (file == null || file.isEmpty()) {

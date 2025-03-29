@@ -32,24 +32,6 @@ public class AuthService {
     @Autowired
     private PlatformUserElasticsearchRepository platformUserElasticsearchRepository;
 
-//    public PlatformUser saveUser(PlatformUser platformUser) {
-//        platformUser.setPassword(passwordEncoder.encode(platformUser.getPassword()));
-//        PlatformUser savedUser = repository.save(platformUser);
-//
-//        try {
-//            String userJson = objectMapper.writeValueAsString(savedUser);
-//
-//            kafkaTemplate.send(KafkaConstants.REGISTRATION_TOPIC, userJson);
-//
-//            System.out.println("Sent user registration data to Kafka topic: " + savedUser.getEmail());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return savedUser;
-//    }
-
-
     public PlatformUser saveUser(PlatformUser platformUser) {
         platformUser.setPassword(passwordEncoder.encode(platformUser.getPassword()));
 

@@ -8,14 +8,12 @@ const AuditChart = ({ auditLogs, selectedField, visualizationType }) => {
         return <p className="text-center text-muted mt-3">No audit data available.</p>;
     }
 
-    // Grouping data by selected field
     const groupedData = auditLogs.reduce((acc, log) => {
         const key = log[selectedField] || "Unknown";
         acc[key] = (acc[key] || 0) + 1;
         return acc;
     }, {});
 
-    // Convert object into array for chart
     const chartData = Object.keys(groupedData).map((key, index) => ({
         name: key,
         value: groupedData[key],
@@ -26,7 +24,6 @@ const AuditChart = ({ auditLogs, selectedField, visualizationType }) => {
         <div className="card shadow-lg p-4 mt-4">
             <h4 className="text-center text-primary">Visualization: {visualizationType.replace("Chart", " Chart")}</h4>
 
-            {/* Pie Chart */}
             {visualizationType === "PieChart" && (
                 <PieChart width={400} height={400}>
                     <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} label>
@@ -39,7 +36,6 @@ const AuditChart = ({ auditLogs, selectedField, visualizationType }) => {
                 </PieChart>
             )}
 
-            {/* Bar Chart */}
             {visualizationType === "BarChart" && (
                 <BarChart width={500} height={300} data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -51,7 +47,6 @@ const AuditChart = ({ auditLogs, selectedField, visualizationType }) => {
                 </BarChart>
             )}
 
-            {/* Line Chart */}
             {visualizationType === "LineChart" && (
                 <LineChart width={500} height={300} data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />

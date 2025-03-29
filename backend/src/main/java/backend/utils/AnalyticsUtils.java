@@ -17,7 +17,7 @@ public class AnalyticsUtils {
     public static long convertToBytes(String size) {
         if (size == null || size.isEmpty()) return 0;
         try {
-            return Long.parseLong(size.trim()); // Directly parse the numeric value in bytes
+            return Long.parseLong(size.trim());
         } catch (NumberFormatException e) {
             System.err.println("Invalid file size format: " + size);
             return 0;

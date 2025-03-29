@@ -5,16 +5,16 @@ import { Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const StudentDetails = () => {
-  const { studentId } = useParams(); // Get student ID from URL
+  const { studentId } = useParams();  
   const [documents, setDocuments] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [documentType, setDocumentType] = useState('');
   const [file, setFile] = useState(null);
-  const [deleteModal, setDeleteModal] = useState(false); // Modal for deletion confirmation
-  const [docToDelete, setDocToDelete] = useState(null); // Document to be deleted
-  const [successMessage, setSuccessMessage] = useState(''); // For success messages
+  const [deleteModal, setDeleteModal] = useState(false);  
+  const [docToDelete, setDocToDelete] = useState(null);  
+  const [successMessage, setSuccessMessage] = useState('');  
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -49,8 +49,8 @@ const StudentDetails = () => {
 
         setDocuments(documents.filter(doc => doc.documentId !== docToDelete));
         setSuccessMessage('Document deleted successfully!');
-        setDeleteModal(false); // Close delete modal
-        setDocToDelete(null); // Reset the document to delete
+        setDeleteModal(false); 
+        setDocToDelete(null); 
 
         setTimeout(() => {
           setSuccessMessage('');
@@ -65,7 +65,6 @@ const StudentDetails = () => {
     }
   };
 
-  // Function to handle file upload
   const handleUpload = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('token');
@@ -86,14 +85,12 @@ const StudentDetails = () => {
       setSuccessMessage('Document uploaded successfully!');
       setShowModal(false);
 
-      // Add the new document at the beginning of the list
       setDocuments([{ documentType, documentName: file.name, fileSize: `${(file.size / 1024).toFixed(2)} KB` }, ...documents]);
 
       setTimeout(() => {
         setSuccessMessage('');
       }, 1000);
 
-      // Optionally reload the page if necessary
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -105,7 +102,6 @@ const StudentDetails = () => {
   };
 
 
-  // Function to download a document
   const downloadDocument = async (documentId, documentName) => {
     const token = localStorage.getItem('token');
 

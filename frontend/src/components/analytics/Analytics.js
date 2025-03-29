@@ -91,7 +91,6 @@ const Analytics = () => {
         <div className="container mt-5 text-center">
             <h2 className="text-primary fw-bold">Analytics Dashboard</h2>
 
-            {/* Audit Analytics Section */}
             <div className="card shadow-lg p-3 mt-4">
                 <h4 className="text-muted">Auditing Analytics</h4>
                 <div className="d-flex flex-wrap justify-content-center gap-2 mt-3">
@@ -107,7 +106,6 @@ const Analytics = () => {
                 </div>
             </div>
 
-            {/* Selected Audit Chart */}
             {selectedField && (
                 <div className="card shadow-lg p-3 mt-4 text-center w-75 mx-auto" style={{ maxWidth: "600px" }}>
                     <h5>Visualization for {selectedField.replace(/([A-Z])/g, " $1").toUpperCase()}</h5>
@@ -128,7 +126,6 @@ const Analytics = () => {
                 </div>
             )}
 
-            {/* Verification Analytics Section */}
             {analyticsData && (
                 <div className="card shadow-lg p-3 mt-5 text-center">
                     <h4 className="text-muted">Verification Analytics</h4>
@@ -181,7 +178,6 @@ const Analytics = () => {
                 </div>
             )}
             <div className="container mt-5 text-center">
-                {/* Document Analytics Section */}
                 <div className="card shadow-lg p-4 mt-5 text-center">
                     <h4 className="text-muted">Document Analytics</h4>
                     <div className="d-flex flex-wrap justify-content-center gap-2 mt-3">

@@ -32,7 +32,6 @@ const UploadDocument = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            // Redirect to student details after upload
             navigate(`/student/${studentId}`);
         } catch (err) {
             console.error('Error uploading document:', err.response ? err.response.data : err.message);

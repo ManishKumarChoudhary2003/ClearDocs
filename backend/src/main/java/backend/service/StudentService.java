@@ -71,19 +71,16 @@ public class StudentService {
         if (studentOptional.isPresent()) {
             Student student = studentOptional.get();
 
-            // Update student details in Elasticsearch
             Optional<StudentElastic> studentElasticOptional = studentElasticsearchRepository.findById(student.getStudentElasticId());
             StudentElastic savedStudentElastic = null;
 
             if (studentElasticOptional.isPresent()) {
                 StudentElastic toBeUpdatedElastic = studentElasticOptional.get();
 
-                // Map updated details from Student to StudentElastic
                 toBeUpdatedElastic.setName(studentDetails.getName());
                 toBeUpdatedElastic.setEmail(studentDetails.getEmail());
                 toBeUpdatedElastic.setEnrollmentNumber(studentDetails.getEnrollmentNumber());
 
-                // Convert Date to Long (milliseconds timestamp) for Elasticsearch
                 if (studentDetails.getDateOfBirth() != null) {
                     toBeUpdatedElastic.setDateOfBirth(studentDetails.getDateOfBirth()
                             .atZone(ZoneId.systemDefault())
@@ -91,31 +88,25 @@ public class StudentService {
                             .toEpochMilli());
                 }
 
-                // Save updated StudentElastic
                 savedStudentElastic = studentElasticsearchRepository.save(toBeUpdatedElastic);
             }
 
-            // Update student details in JPA
             student.setName(studentDetails.getName());
             student.setEmail(studentDetails.getEmail());
             student.setEnrollmentNumber(studentDetails.getEnrollmentNumber());
 
-            // Convert LocalDateTime to Date for JPA (if using LocalDateTime)
             if (studentDetails.getDateOfBirth() != null) {
                 student.setDateOfBirth(studentDetails.getDateOfBirth());
             }
 
-            // Update StudentElasticId in JPA if updated in Elasticsearch
             if (savedStudentElastic != null) {
                 student.setStudentElasticId(savedStudentElastic.getStudentId());
             }
 
-            // Produce Kafka event
             if (kafkaProducer != null) {
                 kafkaProducer.producerForStudentUpdation(student.getEmail());
             }
 
-            // Save updated student
             return studentRepository.save(student);
         }
         return null;
@@ -144,14 +135,6 @@ public class StudentService {
     }
 
 
-
-//    public boolean deleteStudent(String enrollmentNumber) {
-//        if (studentRepository.existsByEnrollmentNumber(enrollmentNumber)) {
-//            studentRepository.deleteByEnrollmentNumber(enrollmentNumber);
-//            return true;
-//        }
-//        return false;
-//    }
 
     public List<Student> getAllStudentsByUser(Long userId) {
         Optional<PlatformUser> platformUser = platformUserRepository.findById(userId);
