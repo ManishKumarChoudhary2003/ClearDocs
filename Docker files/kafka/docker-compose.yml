@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    container_name: zookeeper
+    networks:
+      - kafka_network
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+    user: root
+    ports:
+      - "2181:2181"        
+    volumes:
+      - ./zookeeper/data/zookeeper:/var/lib/zookeeper/data
+      - ./zookeeper/logs/zookeeper:/var/lib/zookeeper/log
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    restart: "no"
+
+  kafka:
+    image: confluentinc/cp-kafka
+    container_name: kafka
+    networks:
+      - kafka_network
+    user: root
+        
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1  
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    depends_on:
+      - zookeeper
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    volumes:
+     - ./kafka/data:/var/lib/kafka/data
+    restart: "no"
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry
+    container_name: schema-registry
+    networks:
+      - kafka_network
+    environment:
+      - SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL=zookeeper:2181
+      - SCHEMA_REGISTRY_HOST_NAME=schema-registry
+      - SCHEMA_REGISTRY_LISTENERS=http://schema-registry:8081
+      - SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS=kafka:9092
+
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    depends_on:
+      - kafka
+    ports:
+      - "8081:8081"
+    restart: "no"
+
+networks:
+  kafka_network:
+    driver: bridge
+
+

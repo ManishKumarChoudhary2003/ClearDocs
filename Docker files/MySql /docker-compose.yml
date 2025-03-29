@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    container_name: mysql8
+    image: mysql:8.0.37
+    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"   
+    networks:
+      - my_network
+    volumes:
+      - ./config/mysql/my.cnf:/etc/mysql/my.cnf  
+      - ./data:/var/lib/mysql                  
+      - ./logs/mysql:/var/log/mysql             
+
+networks:
+  my_network:
+    driver: bridge
+
