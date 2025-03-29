@@ -45,7 +45,7 @@ const UpdateStudent = () => {
     };
 
     try {
-      const response = await axios.put(`http://localhost:8080/student/update/${studentId}`, updatedStudent, {
+      await axios.put(`http://localhost:8080/student/update/${studentId}`, updatedStudent, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
